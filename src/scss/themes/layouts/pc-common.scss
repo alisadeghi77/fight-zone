@@ -10,8 +10,8 @@ body {
   $temp: $header-height + 61;
   position: relative;
   top: $header-height;
-  margin-left: $sidebar-width;
-  margin-right: 20px;
+  margin-left: 20px;
+  margin-right: $sidebar-width;
   min-height: calc(100vh - #{$temp});
   background: $body-bg;
   border-radius: 8px;
@@ -20,6 +20,12 @@ body {
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 20px;
+  }
+  
+  // RTL Support
+  [dir="rtl"] & {
+    margin-left: 20px;
+    margin-right: $sidebar-width;
   }
 
   .page-header + .row {
@@ -34,8 +40,8 @@ body {
   display: flex;
   align-items: center;
   top: $header-height;
-  left: $sidebar-width;
-  right: 0;
+  left: 0;
+  right: $sidebar-width;
   z-index: 1023;
   min-height: 55px;
   padding: 13px 25px;
@@ -43,6 +49,12 @@ body {
   background: $card-bg;
   border-radius: $border-radius;
   margin-bottom: 24px;
+  
+  // RTL Support
+  [dir="rtl"] & {
+    left: 0;
+    right: $sidebar-width;
+  }
 
   .page-block {
     width: 100%;
@@ -58,6 +70,16 @@ body {
     padding-right: 8px;
     font-weight: 500;
     border-right: 1px solid darken($body-bg, 10%);
+    
+    // RTL Support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 8px;
+      padding-right: 0;
+      padding-left: 8px;
+      border-right: none;
+      border-left: 1px solid darken($body-bg, 10%);
+    }
   }
 
   .breadcrumb {
@@ -110,6 +132,7 @@ body {
   .page-header {
     position: relative;
     left: 0;
+    right: 0;
     top: 0;
     margin-left: 10px;
     margin-right: 10px;
@@ -137,6 +160,7 @@ body {
       padding-bottom: 5px;
       margin-bottom: 0;
       border-right: none;
+      border-left: none;
       font-size: 14px;
     }
 
@@ -191,6 +215,12 @@ body {
   i {
     font-size: 18px;
     margin-right: 10px;
+    
+    // RTL Support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 10px;
+    }
   }
 }
 

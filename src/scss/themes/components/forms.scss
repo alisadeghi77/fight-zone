@@ -17,4 +17,12 @@
   > input {
     color: $body-color;
   }
+  
+  // RTL Support
+  [dir="rtl"] & {
+    > .form-control,
+    > .form-select {
+      text-align: right;
+    }
+  }
 }

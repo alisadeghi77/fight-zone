@@ -8,7 +8,14 @@
   position: fixed;
   top: $header-height;
   bottom: 0;
+  right: 0;
   z-index: 1026;
+  
+  // RTL Support
+  [dir="rtl"] & {
+    right: 0;
+    left: auto;
+  }
 
   ul {
     list-style: none;
@@ -46,6 +53,19 @@
       border: 19px solid;
       top: 65px;
       right: -150px;
+    }
+    
+    // RTL Support
+    [dir="rtl"] & {
+      &::before {
+        right: auto;
+        left: -70px;
+      }
+
+      &::after {
+        right: auto;
+        left: -150px;
+      }
     }
 
     &::before,
@@ -85,13 +105,15 @@
 
 @media (max-width: 1024px) {
   .pc-sidebar {
-    left: -#{$sidebar-width};
+    right: -#{$sidebar-width};
+    left: auto;
     box-shadow: none;
     top: 0;
     transition: all 0.15s ease-in-out;
 
     &.mob-open {
-      left: 0;
+      right: 0;
+      left: auto;
       box-shadow: $sidebar-shadow;
 
       .navbar-wrapper {

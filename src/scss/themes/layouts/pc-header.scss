@@ -23,7 +23,12 @@
     align-items: center;
     justify-content: space-between;
     width: $sidebar-width;
-    padding: 16px 10px 16px 24px;
+    padding: 16px 24px 16px 10px;
+    
+    // RTL Support
+    [dir="rtl"] & {
+      padding: 16px 10px 16px 24px;
+    }
   }
 
   .header-wrapper {
@@ -52,6 +57,12 @@
       top: 15px;
       left: 15px;
       font-size: 18px;
+      
+      // RTL Support
+      [dir="rtl"] & {
+        left: auto;
+        right: 15px;
+      }
     }
 
     .btn-search {
@@ -65,6 +76,12 @@
       width: 34px;
       height: 34px;
       border-radius: $border-radius;
+      
+      // RTL Support
+      [dir="rtl"] & {
+        right: auto;
+        left: 9px;
+      }
     }
   }
 
@@ -153,6 +170,17 @@
         right: 16px;
         padding: 0;
       }
+      
+      // RTL Support
+      [dir="rtl"] & {
+        right: auto;
+        left: 10px;
+        
+        &.dots {
+          right: auto;
+          left: 16px;
+        }
+      }
     }
 
     .user-desc,
@@ -209,6 +237,12 @@
     width: 40px;
     margin-right: 10px;
     border-radius: 50%;
+    
+    // RTL Support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 10px;
+    }
   }
 
   .header-user-profile {
@@ -220,6 +254,12 @@
       > span > i {
         font-size: 22px;
         margin-right: 8px;
+        
+        // RTL Support
+        [dir="rtl"] & {
+          margin-right: 0;
+          margin-left: 8px;
+        }
       }
 
       .user-avtar {
@@ -231,6 +271,7 @@
 
         .user-avtar {
           margin-right: 0;
+          margin-left: 0;
         }
 
         > span > i {
@@ -289,17 +330,22 @@
     .settings-block {
       padding: 24px;
 
-      .form-switch {
-        padding-left: 0;
-        margin-bottom: 0;
+          .form-switch {
+      padding-left: 0;
+      margin-bottom: 0;
 
-        + .form-switch {
-          margin-top: 15px;
-        }
+      + .form-switch {
+        margin-top: 15px;
+      }
 
-        .form-check-input {
-          float: right;
+      .form-check-input {
+        float: right;
+        
+        // RTL Support
+        [dir="rtl"] & {
+          float: left;
         }
+      }
 
         .form-check-label {
           color: $headings-color;
@@ -348,6 +394,12 @@
       i {
         font-size: 20px;
         margin-right: 16px;
+        
+        // RTL Support
+        [dir="rtl"] & {
+          margin-right: 0;
+          margin-left: 16px;
+        }
       }
     }
   }

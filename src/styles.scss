@@ -13,6 +13,9 @@ File: style.css
 @import 'node_modules/bootstrap/scss/variables';
 @import 'node_modules/bootstrap/scss/variables-dark';
 
+// RTL Support
+$enable-rtl: true;
+
 @import 'scss/settings/color-variables';
 @import 'scss/settings/theme-variables';
 @import 'scss/settings/bootstrap-variables.scss';
@@ -41,3 +44,6 @@ File: style.css
 @import url('scss/fonts/berry/berry-icons.css'); /** custom font icons - berry **/
 @import 'scss/fonts/tabler-icons.min.css';
 @import 'scss/fonts/phosphor/duotone/style.css';
+
+// RTL Styles
+@import 'scss/rtl/rtl-styles';

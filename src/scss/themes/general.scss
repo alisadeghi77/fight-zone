@@ -34,6 +34,12 @@ strong {
   .btn {
     margin-right: 5px;
     margin-bottom: 5px;
+    
+    // RTL Support
+    [dir="rtl"] & {
+      margin-right: 0;
+      margin-left: 5px;
+    }
   }
   .btn-group {
     .btn {

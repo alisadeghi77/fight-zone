@@ -35,6 +35,13 @@
       display: inline-block;
       padding: 0;
       position: absolute;
+      
+      // RTL Support
+      [dir="rtl"] & {
+        right: auto;
+        left: 10px;
+        float: left;
+      }
 
       @media only screen and (max-width: 575px) {
         display: none;
@@ -61,6 +68,11 @@
 
         i {
           margin-right: 0;
+          
+          // RTL Support
+          [dir="rtl"] & {
+            margin-left: 0;
+          }
         }
 
         &:after {
@@ -83,6 +95,12 @@
         height: 20px;
         right: 8px;
         top: 15px;
+        
+        // RTL Support
+        [dir="rtl"] & {
+          right: auto;
+          left: 8px;
+        }
 
         &.mobile-menu span {
           background-color: #888;

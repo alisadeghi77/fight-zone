@@ -60,6 +60,12 @@
 
       img {
         padding-right: 15px;
+        
+        // RTL Support
+        [dir="rtl"] & {
+          padding-right: 0;
+          padding-left: 15px;
+        }
       }
 
       h5 {
