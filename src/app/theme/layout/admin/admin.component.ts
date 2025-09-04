@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 
 // Project import
-import { BerryConfig } from 'src/app/app-config';
+import { ProjectThemConfig } from 'src/app/app-config';
 
 import { ConfigurationComponent } from './configuration/configuration.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
@@ -41,11 +41,11 @@ export class AdminComponent implements AfterViewInit {
     }
 
     if (current_url === baseHref + '/layout/theme-compact' || current_url === baseHref + '/layout/box') {
-      BerryConfig.isCollapse_menu = true;
+      ProjectThemConfig.isCollapse_menu = true;
     }
 
     this.windowWidth = window.innerWidth;
-    this.navCollapsed = this.windowWidth >= 1025 ? BerryConfig.isCollapse_menu : false;
+    this.navCollapsed = this.windowWidth >= 1025 ? ProjectThemConfig.isCollapse_menu : false;
     this.cdr.detectChanges();
   }
 

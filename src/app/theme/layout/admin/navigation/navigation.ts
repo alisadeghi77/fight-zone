@@ -118,7 +118,7 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Document',
         type: 'item',
         classes: 'nav-item',
-        url: 'https://codedthemes.gitbook.io/berry-angular/',
+        url: 'https://codedthemes.gitbook.io/',
         icon: 'ti ti-vocabulary',
         target: true,
         external: true

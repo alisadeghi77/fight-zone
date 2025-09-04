@@ -1,4 +1,4 @@
-export class BerryConfig {
+export class ProjectThemConfig {
   static isCollapse_menu = false;
   static font_family = 'Roboto'; // Roboto, poppins, inter
   static layout: 'compact'

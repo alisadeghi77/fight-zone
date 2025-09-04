@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, Renderer2 } from '@angular/core';
 
 // project import
-import { BerryConfig } from 'src/app/app-config';
+import { ProjectThemConfig } from 'src/app/app-config';
 
 @Component({
   selector: 'app-configuration',
@@ -20,7 +20,7 @@ export class ConfigurationComponent implements OnInit {
 
   // life cycle event
   ngOnInit(): void {
-    this.setFontFamily = BerryConfig.font_family;
+    this.setFontFamily = ProjectThemConfig.font_family;
     this.fontFamily(this.setFontFamily);
   }
 
