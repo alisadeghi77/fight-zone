@@ -6,11 +6,15 @@ import { GuestComponent } from './theme/layout/guest/guest.component';
 const routes: Routes = [
   {
     path: '',
+    loadChildren: () => import('./web/web-module').then(m => m.WebModule)
+  },
+  {
+    path: 'admin',
     component: AdminComponent,
     children: [
       {
         path: '',
-        redirectTo: '/default',
+        redirectTo: '/admin/default',
         pathMatch: 'full'
       },
       {
@@ -32,7 +36,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: '',
+    path: 'guest',
     component: GuestComponent,
     children: [
       {

@@ -1,0 +1,65 @@
+<div class="container py-5" dir="rtl">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">لیست مسابقات</h1>
+        <div class="d-flex gap-2">
+          <select class="form-select" style="width: auto;">
+            <option value="">همه مسابقات</option>
+            <option value="active">فعال</option>
+            <option value="ended">پایان یافته</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-6 col-xl-4" *ngFor="let competition of competitions">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <h5 class="card-title mb-0">{{ competition.title }}</h5>
+            <span [class]="getStatusClass(competition.status)">{{ competition.status }}</span>
+          </div>
+          
+          <p class="card-text text-muted mb-3">{{ competition.description }}</p>
+          
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <small class="text-muted d-block">جایزه:</small>
+              <strong class="text-success">{{ competition.prize }}</strong>
+            </div>
+            <div class="col-6">
+              <small class="text-muted d-block">تاریخ پایان:</small>
+              <strong>{{ competition.endDate }}</strong>
+            </div>
+          </div>
+          
+          <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted">
+              <i class="bi bi-people me-1"></i>
+              {{ competition.participants }} شرکت‌کننده
+            </small>
+            <button class="btn btn-primary btn-sm" [disabled]="competition.status === 'پایان یافته'">
+              {{ competition.status === 'پایان یافته' ? 'پایان یافته' : 'شرکت در مسابقه' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="row" *ngIf="competitions.length === 0">
+    <div class="col-12">
+      <div class="text-center py-5">
+        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+          <i class="bi bi-trophy text-muted fs-1"></i>
+        </div>
+        <h4 class="text-muted">هیچ مسابقه‌ای یافت نشد</h4>
+        <p class="text-muted">در حال حاضر مسابقه‌ای برای نمایش وجود ندارد</p>
+      </div>
+    </div>
+  </div>
+</div>

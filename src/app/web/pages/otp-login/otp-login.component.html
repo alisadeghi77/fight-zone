@@ -1,0 +1,92 @@
+<div class="min-vh-100 d-flex align-items-center justify-content-center bg-light" dir="rtl">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-4">
+        <div class="card shadow-lg border-0">
+          <div class="card-body p-5">
+            <!-- Logo -->
+            <div class="text-center mb-4">
+              <img src="assets/images/web-logo.svg" alt="لوگو" height="50" class="mb-3">
+              <h4 class="fw-bold text-primary">ورود به حساب کاربری</h4>
+            </div>
+
+            <!-- Phone Number Step -->
+            <div *ngIf="step === 'phone'">
+              <form (ngSubmit)="sendOtp()">
+                <div class="mb-3">
+                  <label for="phoneNumber" class="form-label">شماره موبایل</label>
+                  <input 
+                    type="tel" 
+                    class="form-control form-control-lg" 
+                    id="phoneNumber"
+                    [(ngModel)]="phoneNumber"
+                    (input)="formatPhoneNumber($event)"
+                    name="phoneNumber"
+                    placeholder="۰۹۱۲۳۴۵۶۷۸۹"
+                    maxlength="11"
+                    required>
+                  <div class="form-text">کد تأیید به شماره شما ارسال خواهد شد</div>
+                </div>
+                
+                <button 
+                  type="submit" 
+                  class="btn btn-primary btn-lg w-100"
+                  [disabled]="phoneNumber.length !== 11 || isLoading">
+                  <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                  {{ isLoading ? 'در حال ارسال...' : 'ارسال کد تأیید' }}
+                </button>
+              </form>
+            </div>
+
+            <!-- OTP Verification Step -->
+            <div *ngIf="step === 'otp'">
+              <form (ngSubmit)="verifyOtp()">
+                <div class="mb-3">
+                  <label for="otpCode" class="form-label">کد تأیید</label>
+                  <input 
+                    type="tel" 
+                    class="form-control form-control-lg text-center" 
+                    id="otpCode"
+                    [(ngModel)]="otpCode"
+                    (input)="formatOtpCode($event)"
+                    name="otpCode"
+                    placeholder="۱۲۳۴۵"
+                    maxlength="5"
+                    required>
+                  <div class="form-text">کد ۵ رقمی ارسال شده را وارد کنید</div>
+                </div>
+                
+                <div class="d-grid gap-2">
+                  <button 
+                    type="submit" 
+                    class="btn btn-primary btn-lg"
+                    [disabled]="otpCode.length !== 5 || isLoading">
+                    <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                    {{ isLoading ? 'در حال تأیید...' : 'تأیید و ورود' }}
+                  </button>
+                  
+                  <button 
+                    type="button" 
+                    class="btn btn-outline-secondary"
+                    (click)="goBack()"
+                    [disabled]="isLoading">
+                    بازگشت
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-4">
+              <small class="text-muted">
+                با ورود به سایت، 
+                <a href="#" class="text-decoration-none">قوانین و مقررات</a>
+                را می‌پذیرید
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
