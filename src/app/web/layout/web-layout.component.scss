@@ -1,10 +1,16 @@
+@import "variables";
+
+
 // Minimal custom CSS for RTL support
 .navbar-nav {
   .nav-link {
     font-weight: 500;
     
     &.active {
-      color: var(--bs-primary) !important;
+      color: $-primary-color;
+    }
+    &:hover{
+      color: $-primary-color;
     }
   }
 }

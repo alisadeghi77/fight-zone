@@ -1,10 +1,18 @@
+@import "variables";
+
 // Minimal custom CSS for competition list
 .card {
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  
+}
+
+.btn-outline-primary {
+  border: 1px solid $-primary-color;
+  background-color: white;
+  color: $-primary-color;
+
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    background-color: $-primary-color;
+    color: white;
   }
 }
 
