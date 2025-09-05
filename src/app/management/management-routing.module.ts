@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/home-component/home-component';
 import { ManagementLayoutComponent } from './shared/management-layout/management-layout-component';
 import { CompetitionsComponent } from './pages/competitions/competitions-component/competitions-component';
+import { CompetitionInsertUpdate } from './pages/competitions/competition-insert-update/competition-insert-update';
 
 const routes: Routes = [
   {
@@ -16,7 +17,9 @@ const routes: Routes = [
       {
         path: 'competitions',
         component: CompetitionsComponent
-      }
+      },
+      { path: 'new', component: CompetitionInsertUpdate },
+      { path: 'edit/:id', component: CompetitionInsertUpdate },
     ]
   }
 ];

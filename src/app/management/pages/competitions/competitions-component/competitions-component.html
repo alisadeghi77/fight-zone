@@ -1,0 +1,47 @@
+<div class="card">
+    <div class="card-body">
+        <div class="justify-content-between d-flex">
+            <form  class="d-flex">
+                <label for="table-filtering-search" class=" col-form-label">
+                    جستجو:</label>
+                <div class="">
+                    <input id="table-filtering-search" class="form-control" type="text" />
+                </div>
+            </form>
+                <a href="/management/competitions/new" class="btn btn-small btn-primary">مسابقه جدید</a>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+
+            <table class="table table-hover table-light border table-border ">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">عنوان</th>
+                        <th scope="col">برگزار کننده</th>
+                        <th scope="col">وضعیت ثبت نام</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (competition of competitions; track competition.id; let i = $index) {
+                    <tr>
+                        <th scope="row">{{ competition.id }}</th>
+                        <td>
+                            {{competition.title}}
+                        </td>
+                        <td>{{competition.manager}}</td>
+                        <td>{{competition.canRegister}}</td>
+                    </tr>
+                    } @empty {
+                    <tr>
+                        <td colspan="4" style="text-align: center">رکوردی وجود ندارد</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
