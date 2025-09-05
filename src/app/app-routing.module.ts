@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
+import { ManagementLayoutComponent } from './management/shared/management-layout/management-layout-component';
 
 const routes: Routes = [
   {
@@ -9,8 +9,12 @@ const routes: Routes = [
     loadChildren: () => import('./web/web-module').then(m => m.WebModule)
   },
   {
+    path: 'management',
+    loadChildren: () => import('./management/management-module').then(m => m.ManagementModule)
+  },
+  {
     path: 'admin',
-    component: AdminComponent,
+    component: ManagementLayoutComponent,
     children: [
       {
         path: '',
@@ -55,4 +59,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

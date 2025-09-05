@@ -1,3 +1,4 @@
+
 // Angular import
 import { AfterViewInit, Component, inject } from '@angular/core';
 import { CommonModule, Location, LocationStrategy } from '@angular/common';
@@ -6,19 +7,19 @@ import { ChangeDetectorRef } from '@angular/core';
 
 // Project import
 import { ProjectThemConfig } from 'src/app/app-config';
+import { NavigationComponent } from '../navigation/navigation.component';
+import { NavBarComponent } from '../nav-bar/nav-bar.component';
+import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumbs/breadcrumbs.component';
 
-import { ConfigurationComponent } from './configuration/configuration.component';
-import { NavBarComponent } from './nav-bar/nav-bar.component';
-import { NavigationComponent } from './navigation/navigation.component';
-import { BreadcrumbComponent } from '../../shared/components/breadcrumbs/breadcrumbs.component';
+
 
 @Component({
-  selector: 'app-admin',
-  imports: [CommonModule, NavigationComponent, NavBarComponent, ConfigurationComponent, RouterModule, BreadcrumbComponent],
-  templateUrl: './admin.component.html',
-  styleUrl: './admin.component.scss'
+  selector: 'app-management-layout',
+  imports: [CommonModule, NavigationComponent, NavBarComponent, RouterModule, BreadcrumbComponent],
+  templateUrl: './management-layout-component.html',
+  styleUrl: './management-layout-component.scss'
 })
-export class AdminComponent implements AfterViewInit {
+export class ManagementLayoutComponent implements AfterViewInit {
   private location = inject(Location);
   private locationStrategy = inject(LocationStrategy);
   cdr = inject(ChangeDetectorRef);

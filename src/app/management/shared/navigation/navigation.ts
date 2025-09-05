@@ -18,16 +18,16 @@ export interface NavigationItem {
 export const NavigationItems: NavigationItem[] = [
   {
     id: 'dashboard',
-    title: 'Dashboard',
+    title: 'داشبورد',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
-        id: 'default',
-        title: 'Dashboard',
+        id: 'competitions',
+        title: 'مسابقات',
         type: 'item',
         classes: 'nav-item',
-        url: '/default',
+        url: '/management/competitions',
         icon: 'ti ti-dashboard',
         breadcrumbs: false
       }
