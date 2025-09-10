@@ -71,13 +71,10 @@ export class CompetitionInsertUpdate implements OnInit {
         error: () => (this.message = 'Failed to load competition')
       });
   }
-  onFileUploaded(event:any):void {
-    console.log(event);
+  onFileUploaded(event: any, field: string): void {
     this.form.patchValue({
-      bannerFileId: event
+      [field]: event
     });
-    console.log(this.form.value);
-
   }
 
   save(): void {

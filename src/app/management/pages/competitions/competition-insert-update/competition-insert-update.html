@@ -10,19 +10,6 @@
         </div>
 
         <div class="mb-3 col-6">
-            <label class="form-label">بنر</label>
-            <app-file-upload 
-                (fileUploaded)="onFileUploaded($event)">
-            </app-file-upload>
-            <!-- <input type="text" formControlName="bannerFileId" class="form-control"> -->
-        </div>
-
-        <div class="mb-3 col-6">
-            <label class="form-label">گواهی برگزاری</label>
-            <input type="text" formControlName="licenseFileId" class="form-control">
-        </div>
-
-        <div class="mb-3 col-6">
             <label class="form-label">تاریخ</label>
             <input type="date" formControlName="competitionDate" class="form-control">
         </div>
@@ -33,7 +20,17 @@
             <input type="text" formControlName="competitionAddress" class="form-control">
         </div>
 
-        <div class="mb-3 form-check col-6 d-flex justify-content-start align-items-start">
+        <div class="mb-3 col-3">
+            <label class="form-label">بنر</label>
+            <app-file-upload (fileUploaded)="onFileUploaded($event,'bannerFileId')" />
+        </div>
+
+        <div class="mb-3 col-3">
+            <label class="form-label">گواهی برگزاری</label>
+            <app-file-upload (fileUploaded)="onFileUploaded($event,'licenseFileId')" />
+        </div>
+
+        <div class="mb-3 form-check col-12 d-flex justify-content-start align-items-start">
             <button type="submit" class="btn btn-primary w-50">
                 {{ isEdit ? 'ویرایش' : 'ایجاد' }}
             </button>

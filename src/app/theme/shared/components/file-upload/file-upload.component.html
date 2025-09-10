@@ -1,43 +1,42 @@
 <div class="file-upload-wrapper">
-  <!-- File Input -->
-  <div class="input-group" style="direction: ltr;">
+  <!-- Square File Input with Background Image -->
+  <div class="file-upload-square" 
+       [style.background-image]="uploadedFileId ? 'url(' + getFileUrl(uploadedFileId) + ')' : 'none'"
+       [class.has-image]="uploadedFileId">
+    
+    <!-- File Input Overlay -->
     <input 
       type="file" 
-      class="form-control" 
+      class="file-input-overlay"
       [accept]="getAcceptedTypes()"
       (change)="onFileSelected($event)"
       [disabled]="isUploading">
-    <button 
-      class="btn btn-outline-secondary" 
-      type="button" 
-      (click)="removeFile()"
-      *ngIf="selectedFile && !isUploading">
-      <i class="ti ti-trash"></i>
-    </button>
-  </div>
-
-  <!-- Upload Progress -->
-  <div class="mt-2" *ngIf="isUploading">
-    <div class="d-flex align-items-center">
-      <div class="spinner-border spinner-border-sm me-2" role="status">
+    
+    <!-- Upload Content (when no image) -->
+    <div class="upload-content" *ngIf="!uploadedFileId && !isUploading">
+      <i class="ti ti-cloud-upload upload-icon"></i>
+      <small class="upload-text">Upload Image</small>
+    </div>
+    
+    <!-- Upload Progress -->
+    <div class="upload-progress" *ngIf="isUploading">
+      <div class="spinner-border spinner-border-sm" role="status">
         <span class="visually-hidden">Uploading...</span>
       </div>
-      <small class="text-muted">Uploading...</small>
     </div>
+    
+    <!-- Remove Button -->
+    <button 
+      class="btn-remove" 
+      type="button" 
+      (click)="removeFile()"
+      *ngIf="uploadedFileId && !isUploading">
+      <i class="ti ti-x"></i>
+    </button>
   </div>
 
   <!-- Error Message -->
   <div class="alert alert-danger mt-2" *ngIf="errorMessage">
     <small>{{ errorMessage }}</small>
   </div>
-
-  <!-- Image Preview -->
-  <div class="mt-2" *ngIf="showImage && uploadedFileId">
-    <img 
-      [src]="getFileUrl(uploadedFileId)" 
-      [alt]="selectedFile?.name" 
-      class="img-thumbnail"
-      style="max-width: 150px; max-height: 150px; object-fit: cover;">
-  </div>
-
 </div>
