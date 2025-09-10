@@ -6,10 +6,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { CompetitionHttpService } from 'src/app/shared/http-services/competition-http-service';
 import { CompetitionDto, UpdateCompetitionRequestDto, CreateCompetitionRequestDto } from 'src/app/shared/models/competition.models';
+import { FileUploadComponent } from 'src/app/theme/shared/components/file-upload/file-upload.component';
 
 @Component({
   selector: 'app-competition-insert-update',
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, FileUploadComponent],
   templateUrl: './competition-insert-update.html',
   styleUrl: './competition-insert-update.scss'
 })
@@ -32,15 +33,11 @@ export class CompetitionInsertUpdate implements OnInit {
     this.isEdit = !!this.competition;
 
     this.form = this.fb.group({
-      title: ['', Validators.required],
-      manager: ['', Validators.required],
-      gender: ['', Validators.required],
-      canRegister: [true],
-      bannerImage: [''],
-      price: [0, [Validators.required, Validators.min(0)]],
-      date: ['', Validators.required],
-      award: [0],
-      location: ['', Validators.required]
+      competitionTitle: ['', Validators.required],
+      licenseFileId: [''],
+      bannerFileId: [''],
+      competitionDate: ['', Validators.required],
+      competitionAddress: ['', Validators.required]
     });
 
     this.route.paramMap
@@ -73,6 +70,14 @@ export class CompetitionInsertUpdate implements OnInit {
         },
         error: () => (this.message = 'Failed to load competition')
       });
+  }
+  onFileUploaded(event:any):void {
+    console.log(event);
+    this.form.patchValue({
+      bannerFileId: event
+    });
+    console.log(this.form.value);
+
   }
 
   save(): void {

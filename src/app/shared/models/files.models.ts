@@ -1,7 +1,6 @@
 export interface FileUploadResponseDto {
-  fileId: string;
+  id: string;
   fileName: string;
-  fileUrl: string;
 }
 
 export interface FileInfoDto {

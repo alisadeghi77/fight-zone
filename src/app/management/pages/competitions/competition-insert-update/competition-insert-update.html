@@ -6,55 +6,35 @@
     <form class="row" [formGroup]="form" (ngSubmit)="save()">
         <div class="mb-3 col-6">
             <label class="form-label">عنوان</label>
-            <input type="text" formControlName="title" class="form-control">
+            <input type="text" formControlName="competitionTitle" class="form-control">
         </div>
 
         <div class="mb-3 col-6">
-            <label class="form-label">برگزار کننده</label>
-            <input type="text" formControlName="manager" class="form-control">
+            <label class="form-label">بنر</label>
+            <app-file-upload 
+                (fileUploaded)="onFileUploaded($event)">
+            </app-file-upload>
+            <!-- <input type="text" formControlName="bannerFileId" class="form-control"> -->
         </div>
 
         <div class="mb-3 col-6">
-            <label class="form-label">جنسیت</label>
-            <select formControlName="gender" class="form-select">
-                <option value="male">آقایان</option>
-                <option value="female">بانوان</option>
-                <option value="mixed">هر دو</option>
-            </select>
-        </div>
-
-        <div class="mb-3 col-6">
-            <label class="form-label">تصویر بنر</label>
-            <input type="text" formControlName="bannerImage" class="form-control">
-        </div>
-
-        <div class="mb-3 col-6">
-            <label class="form-label">قیمت</label>
-            <input type="number" formControlName="price" class="form-control">
+            <label class="form-label">گواهی برگزاری</label>
+            <input type="text" formControlName="licenseFileId" class="form-control">
         </div>
 
         <div class="mb-3 col-6">
             <label class="form-label">تاریخ</label>
-            <input type="date" formControlName="date" class="form-control">
+            <input type="date" formControlName="competitionDate" class="form-control">
         </div>
 
-        <div class="mb-3 col-6">
-            <label class="form-label">جایزه</label>
-            <input type="number" formControlName="award" class="form-control">
-        </div>
 
         <div class="mb-3 col-6">
             <label class="form-label">محل برگزاری</label>
-            <input type="text" formControlName="location" class="form-control">
+            <input type="text" formControlName="competitionAddress" class="form-control">
         </div>
 
-        <div class="mb-3 form-check col-3 d-flex justify-content-end">
-            <input type="checkbox" class="form-check-input" formControlName="canRegister" />
-            <label class="form-check-label mx-5">قابل ثبت نام</label>
-        </div>
-        <div class="mb-3 form-check col-6"></div>
-        <div class="mb-3 form-check col-3 d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary w-100">
+        <div class="mb-3 form-check col-6 d-flex justify-content-start align-items-start">
+            <button type="submit" class="btn btn-primary w-50">
                 {{ isEdit ? 'ویرایش' : 'ایجاد' }}
             </button>
         </div>

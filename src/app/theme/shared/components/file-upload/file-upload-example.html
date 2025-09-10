@@ -1,0 +1,39 @@
+<!-- Example usage of the FileUploadComponent -->
+
+<!-- Basic usage with default settings -->
+<app-file-upload
+  (fileUploaded)="onFileUploaded($event)">
+</app-file-upload>
+
+<!-- With custom extensions -->
+<app-file-upload
+  [extensions]="['jpg', 'jpeg', 'png']"
+  [showImage]="true"
+  (fileUploaded)="onFileUploaded($event)">
+</app-file-upload>
+
+<!-- With reactive forms -->
+<form [formGroup]="myForm">
+  <app-file-upload
+    formControlName="imageFile"
+    [extensions]="['jpg', 'jpeg', 'png', 'gif']"
+    [showImage]="false"
+    (fileUploaded)="onFileUploaded($event)">
+  </app-file-upload>
+</form>
+
+<!-- Example component implementation -->
+<!--
+export class ExampleComponent {
+  myForm = this.fb.group({
+    imageFile: ['']
+  });
+
+  constructor(private fb: FormBuilder) {}
+
+  onFileUploaded(fileId: string): void {
+    console.log('File uploaded with ID:', fileId);
+    // The fileId is also automatically set in the form control
+  }
+}
+-->

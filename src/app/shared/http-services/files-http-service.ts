@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FileUploadResponseDto, FileInfoDto } from '../models/files.models';
 import { environment } from 'src/environments/environment';
+import { BaseResponseDto } from '../models/competition.models';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +13,10 @@ export class FilesHttpService {
 
   constructor(private http: HttpClient) { }
 
-  uploadFile(file: File): Observable<FileUploadResponseDto> {
+  uploadFile(file: File): Observable<BaseResponseDto<FileUploadResponseDto>> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<FileUploadResponseDto>(`${this.baseUrl}/upload`, formData);
+    return this.http.post<BaseResponseDto<FileUploadResponseDto>>(`${this.baseUrl}/upload`, formData);
   }
 
   getFileInfo(fileId: string): Observable<FileInfoDto> {
