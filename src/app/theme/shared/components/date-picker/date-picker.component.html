@@ -1,0 +1,14 @@
+<div class="date-picker-wrapper">
+  <input 
+    type="text" 
+    [placeholder]="'مثال: 1403/03/15'"
+    [(ngModel)]="persianDate"
+    (input)="onPersianDateChange($event)"
+    class="form-control"
+    maxlength="10"
+    style="direction: ltr;">
+  
+  <small class="text-muted">
+    فرمت: سال/ماه/روز (مثال: 1403/03/15)
+  </small>
+</div>

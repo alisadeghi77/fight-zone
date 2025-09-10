@@ -30,6 +30,7 @@
     "@popperjs/core": "2.11.8",
     "apexcharts": "4.7.0",
     "bootstrap": "5.3.7",
+    "jalali-moment": "^3.3.11",
     "ng-apexcharts": "1.16.0",
     "ngx-scrollbar": "18.0.0",
     "rxjs": "~7.8.2",

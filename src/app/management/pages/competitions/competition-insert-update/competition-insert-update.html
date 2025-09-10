@@ -11,7 +11,7 @@
 
         <div class="mb-3 col-6">
             <label class="form-label">تاریخ</label>
-            <input type="date" formControlName="competitionDate" class="form-control">
+            <app-date-picker [dateInput]="this.form.get('competitionDate')?.value" (dateChange)="onDateChange($event)" />
         </div>
 
 

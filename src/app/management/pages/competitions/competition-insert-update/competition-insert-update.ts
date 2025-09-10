@@ -5,12 +5,13 @@ import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { CompetitionHttpService } from 'src/app/shared/http-services/competition-http-service';
-import { CompetitionDto, UpdateCompetitionRequestDto, CreateCompetitionRequestDto } from 'src/app/shared/models/competition.models';
+import { CompetitionDto } from 'src/app/shared/models/competition.models';
 import { FileUploadComponent } from 'src/app/theme/shared/components/file-upload/file-upload.component';
+import { DatePickerComponent } from 'src/app/theme/shared/components/date-picker/date-picker.component';
 
 @Component({
   selector: 'app-competition-insert-update',
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, FileUploadComponent],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, FileUploadComponent, DatePickerComponent],
   templateUrl: './competition-insert-update.html',
   styleUrl: './competition-insert-update.scss'
 })
@@ -56,24 +57,26 @@ export class CompetitionInsertUpdate implements OnInit {
         next: (competition: CompetitionDto) => {
           if (competition) {
             this.form.patchValue({
-              title: competition.title,
-              manager: competition.manager,
-              gender: competition.gender,
-              canRegister: competition.canRegister,
-              bannerImage: competition.bannerImage,
-              price: competition.price,
-              date: competition.date,
-              award: competition.award,
-              location: competition.location
+              competitionTitle: competition.title,
+              competitionAddress: competition.location,
+              competitionDate: competition.date
             });
           }
         },
         error: () => (this.message = 'Failed to load competition')
       });
   }
+
   onFileUploaded(event: any, field: string): void {
     this.form.patchValue({
       [field]: event
+    });
+  }
+
+  onDateChange(gregorianDate: string): void {
+    console.log('Gregorian date:', gregorianDate);
+    this.form.patchValue({
+      competitionDate: gregorianDate
     });
   }
 
