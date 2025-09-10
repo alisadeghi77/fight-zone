@@ -1,64 +1,66 @@
 <div class="card shadow-sm p-3">
     <h5 class="card-title mb-3">
-        {{ isEdit ? 'Edit Competition' : 'Create Competition' }}
+        {{ isEdit ? 'ویرایش مسابقه' : 'ایجاد مسابقه' }}
     </h5>
 
-    <form [formGroup]="form" (ngSubmit)="save()">
-        <div class="mb-3">
-            <label class="form-label">Title</label>
+    <form class="row" [formGroup]="form" (ngSubmit)="save()">
+        <div class="mb-3 col-6">
+            <label class="form-label">عنوان</label>
             <input type="text" formControlName="title" class="form-control">
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Manager</label>
+        <div class="mb-3 col-6">
+            <label class="form-label">برگزار کننده</label>
             <input type="text" formControlName="manager" class="form-control">
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Gender</label>
+        <div class="mb-3 col-6">
+            <label class="form-label">جنسیت</label>
             <select formControlName="gender" class="form-select">
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="mixed">Mixed</option>
+                <option value="male">آقایان</option>
+                <option value="female">بانوان</option>
+                <option value="mixed">هر دو</option>
             </select>
         </div>
 
-        <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" formControlName="canRegister">
-            <label class="form-check-label">Can Register</label>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Banner Image</label>
+        <div class="mb-3 col-6">
+            <label class="form-label">تصویر بنر</label>
             <input type="text" formControlName="bannerImage" class="form-control">
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Price</label>
+        <div class="mb-3 col-6">
+            <label class="form-label">قیمت</label>
             <input type="number" formControlName="price" class="form-control">
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Date</label>
+        <div class="mb-3 col-6">
+            <label class="form-label">تاریخ</label>
             <input type="date" formControlName="date" class="form-control">
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Award</label>
+        <div class="mb-3 col-6">
+            <label class="form-label">جایزه</label>
             <input type="number" formControlName="award" class="form-control">
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Location</label>
+        <div class="mb-3 col-6">
+            <label class="form-label">محل برگزاری</label>
             <input type="text" formControlName="location" class="form-control">
         </div>
 
-        <button type="submit" class="btn btn-primary">
-            {{ isEdit ? 'Update' : 'Create' }}
-        </button>
+        <div class="mb-3 form-check col-3 d-flex justify-content-end">
+            <input type="checkbox" class="form-check-input" formControlName="canRegister" />
+            <label class="form-check-label mx-5">قابل ثبت نام</label>
+        </div>
+        <div class="mb-3 form-check col-6"></div>
+        <div class="mb-3 form-check col-3 d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary w-100">
+                {{ isEdit ? 'ویرایش' : 'ایجاد' }}
+            </button>
+        </div>
     </form>
 
-    <div *ngIf="message" class="mt-3 alert alert-info">
+    <div *ngIf="message" class="mt-3 alert alert-info text-center   ">
         {{ message }}
     </div>
 </div>

@@ -1,3 +1,9 @@
+export interface BaseResponseDto<T> {
+    data: T, 
+    status: number, 
+    errorMessages: string[] 
+}
+
 export interface CompetitionDto {
     id: string;
     title: string;

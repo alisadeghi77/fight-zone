@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CompetitionDto, CreateCompetitionRequestDto, UpdateCompetitionRequestDto } from '../models/competition.models';
+import { BaseResponseDto, CompetitionDto, CreateCompetitionRequestDto, UpdateCompetitionRequestDto } from '../models/competition.models';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -12,8 +12,8 @@ export class CompetitionHttpService {
 
   constructor(private http: HttpClient) { }
 
-  getCompetitions(): Observable<CompetitionDto[]> {
-    return this.http.get<CompetitionDto[]>(`${this.baseUrl}`);
+  getCompetitions(): Observable<BaseResponseDto<CompetitionDto[]>> {
+    return this.http.get<BaseResponseDto<CompetitionDto[]>>(`${this.baseUrl}`);
   }
 
   getCompetitionById(id: string): Observable<CompetitionDto> {

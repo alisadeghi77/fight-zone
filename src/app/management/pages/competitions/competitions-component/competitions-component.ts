@@ -30,9 +30,9 @@ export class CompetitionsComponent implements OnInit {
 
   loadCompetitions(): void {
     this.competitionService.getCompetitions()
-      .subscribe(data => {
-        this.competitions = data
-        this.filteredDate = data
+      .subscribe(response => {
+        this.competitions = response.data
+        this.filteredDate = response.data
       });
   }
 }

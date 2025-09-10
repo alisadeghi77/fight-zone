@@ -18,8 +18,8 @@ const routes: Routes = [
         path: 'competitions',
         component: CompetitionsComponent
       },
-      { path: 'new', component: CompetitionInsertUpdate },
-      { path: 'edit/:id', component: CompetitionInsertUpdate },
+      { path: 'competitions/new', component: CompetitionInsertUpdate },
+      { path: 'competitions/edit/:id', component: CompetitionInsertUpdate },
     ]
   }
 ];
