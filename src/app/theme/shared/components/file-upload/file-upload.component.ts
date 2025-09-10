@@ -20,13 +20,13 @@ import { BaseResponseDto } from 'src/app/shared/models/competition.models';
   ]
 })
 export class FileUploadComponent {
+  @Input() uploadedFileId: number | null = null;
   @Input() extensions: string[] = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
   @Input() showImage: boolean = true;
   @Input() maxFileSize: number = 5 * 1024 * 1024; // 5MB default
   @Output() fileUploaded = new EventEmitter<string>();
 
   selectedFile: File | null = null;
-  uploadedFileId: string | null = null;
   isUploading: boolean = false;
   errorMessage: string = '';
 
@@ -80,8 +80,8 @@ export class FileUploadComponent {
 
     this.filesHttpService.uploadFile(this.selectedFile).subscribe({
       next: (response: BaseResponseDto<FileUploadResponseDto>) => {
-        debugger;
-        this.uploadedFileId = response.data.id;
+    
+        this.uploadedFileId = parseInt(response.data.id);
         this.isUploading = false;
         
         // Emit the file ID
@@ -106,11 +106,11 @@ export class FileUploadComponent {
     return this.extensions.map(ext => `.${ext}`).join(',');
   }
 
-  getFileUrl(fileId: string): string {
+  getFileUrl(fileId: number): string {
     return `${environment.baseApiUrl}/files/${fileId}`;
   }
 
   writeValue(value: string | null): void {
-    this.uploadedFileId = value;
+    this.uploadedFileId = parseInt(value);
   }
 }

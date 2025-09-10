@@ -47,7 +47,7 @@ export class AuthService {
   }
 
   login(token: string, user: User): void {
-    debugger;
+
     localStorage.setItem('authToken', token);
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSubject.next(user);

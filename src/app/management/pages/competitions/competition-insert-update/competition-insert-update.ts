@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { CompetitionHttpService } from 'src/app/shared/http-services/competition-http-service';
-import { CompetitionDto } from 'src/app/shared/models/competition.models';
+import { BaseResponseDto, CompetitionDto } from 'src/app/shared/models/competition.models';
 import { FileUploadComponent } from 'src/app/theme/shared/components/file-upload/file-upload.component';
 import { DatePickerComponent } from 'src/app/theme/shared/components/date-picker/date-picker.component';
 
@@ -32,7 +32,6 @@ export class CompetitionInsertUpdate implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.isEdit = !!this.competition;
 
     this.form = this.fb.group({
       competitionTitle: ['', Validators.required],
@@ -59,16 +58,22 @@ export class CompetitionInsertUpdate implements OnInit {
         })
       )
       .subscribe({
-        next: (competition: CompetitionDto) => {
-          if (competition) {
+        next: (response: BaseResponseDto<CompetitionDto>) => {
+          const competition = response.data;
+          if (response) {
             this.form.patchValue({
               competitionTitle: competition.title,
-              competitionAddress: competition.location,
-              competitionDate: competition.date
+              competitionAddress: competition.address,
+              competitionDate: competition.date,
+              bannerFileId: competition.bannerImageId,
+              licenseFileId: competition.licenseImageId,
+            });
+            this.jsonForm.patchValue({
+              jsonParams: competition.registerParams
             });
           }
         },
-        error: () => (this.message = 'Failed to load competition')
+        error: (response) => (this.message = response.error.errorMessages[0].message)
       });
   }
 
@@ -85,7 +90,6 @@ export class CompetitionInsertUpdate implements OnInit {
     });
   }
 
-  // JSON validator function
   jsonValidator(control: any) {
     if (!control.value || control.value.trim() === '') {
       return null; // No error for empty values
@@ -146,11 +150,10 @@ export class CompetitionInsertUpdate implements OnInit {
     } else {
       this.competitionService.createCompetition(this.form.value)
         .subscribe({
-          next: () => {
-            this.message = 'Competition created successfully ✅';
-            this.router.navigate(['/competitions']);
+          next: (response) => {
+            this.router.navigate(['management/competitions/edit/', response.data]);
           },
-          error: () => this.message = 'Error creating competition ❌'
+          error: (response) => this.message = response.error.errorMessages[0].message || 'Error creating competition ❌'
         });
     }
   }

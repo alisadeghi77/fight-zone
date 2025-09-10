@@ -23,16 +23,18 @@
 
         <div class="mb-3 col-3">
             <label class="form-label">بنر</label>
-            <app-file-upload (fileUploaded)="onFileUploaded($event,'bannerFileId')" />
+            <app-file-upload [uploadedFileId]="form.get('bannerFileId')?.value"
+                (fileUploaded)="onFileUploaded($event,'bannerFileId')" />
         </div>
 
         <div class="mb-3 col-3">
             <label class="form-label">گواهی برگزاری</label>
-            <app-file-upload (fileUploaded)="onFileUploaded($event,'licenseFileId')" />
+            <app-file-upload [uploadedFileId]="form.get('licenseFileId')?.value"
+                (fileUploaded)="onFileUploaded($event,'licenseFileId')" />
         </div>
 
         <div class="mb-3 form-check col-12 d-flex justify-content-start align-items-start">
-            <button type="submit" class="btn btn-primary w-50">
+            <button type="submit" class="btn btn-primary ">
                 {{ isEdit ? 'ویرایش' : 'ایجاد' }}
             </button>
         </div>
@@ -47,34 +49,28 @@
     <h5 class="card-title mb-3">
         اطلاعات جداول
     </h5>
-    <div class="mb-3 col-12" >
-        <div class="card">
-            <div class="card-header">
-                <h6 class="card-title mb-0">JSON Parameters Editor</h6>
+    <div class="card-body">
+        <form [formGroup]="jsonForm">
+            <div class="mb-3">
+                <label class="form-label">رده وزنی مسابقه</label>
+                <textarea class="form-control" formControlName="jsonParams"
+                    placeholder='{"key": "value", "settings": {"option1": true, "option2": "text"}}'
+                    [class.is-invalid]="jsonForm.get('jsonParams')?.invalid && jsonForm.get('jsonParams')?.touched">
+                </textarea>
+                <div class="invalid-feedback" *ngIf="jsonForm.get('jsonParams')?.errors?.['invalidJson']">
+                    Invalid JSON format
+                </div>
+                <small class="text-muted">
+                    Enter valid JSON parameters for the competition
+                </small>
             </div>
-            <div class="card-body">
-                <form [formGroup]="jsonForm">
-                    <div class="mb-3">
-                        <label class="form-label">JSON Parameters</label>
-                        <input type="text" class="form-control" formControlName="jsonParams"
-                            placeholder='{"key": "value", "settings": {"option1": true, "option2": "text"}}'
-                            [class.is-invalid]="jsonForm.get('jsonParams')?.invalid && jsonForm.get('jsonParams')?.touched">
-                        <div class="invalid-feedback" *ngIf="jsonForm.get('jsonParams')?.errors?.['invalidJson']">
-                            Invalid JSON format
-                        </div>
-                        <small class="text-muted">
-                            Enter valid JSON parameters for the competition
-                        </small>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-warning" (click)="updateCompetitionParams()"
-                            [disabled]="jsonForm.invalid || !jsonForm.get('jsonParams')?.value?.trim()">
-                            <i class="ti ti-upload me-1"></i>
-                            Update Parameters
-                        </button>
-                    </div>
-                </form>
+            <div class="d-flex justify-content-start">
+                <button type="button" class="btn btn-primary" (click)="updateCompetitionParams()"
+                    [disabled]="jsonForm.invalid || !jsonForm.get('jsonParams')?.value?.trim()">
+                    <i class="ti ti-upload me-1"></i>
+                    ویرایش رده وزنی مسابقه
+                </button>
             </div>
-        </div>
+        </form>
     </div>
 </div>

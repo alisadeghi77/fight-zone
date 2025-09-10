@@ -16,16 +16,16 @@ export class CompetitionHttpService {
     return this.http.get<BaseResponseDto<CompetitionDto[]>>(`${this.baseUrl}`);
   }
 
-  getCompetitionById(id: string): Observable<CompetitionDto> {
-    return this.http.get<CompetitionDto>(`${this.baseUrl}/${id}`);
+  getCompetitionById(id: string): Observable<BaseResponseDto<CompetitionDto>> {
+    return this.http.get<BaseResponseDto<CompetitionDto>>(`${this.baseUrl}/${id}`);
   }
 
-  createCompetition(request: CreateCompetitionRequestDto): Observable<CompetitionDto> {
-    return this.http.post<CompetitionDto>(`${this.baseUrl}`, request);
+  createCompetition(request: CreateCompetitionRequestDto): Observable<BaseResponseDto<CompetitionDto>> {
+    return this.http.post<BaseResponseDto<CompetitionDto>>(`${this.baseUrl}`, request);
   }
 
-  updateCompetition(id: string, request: UpdateCompetitionRequestDto): Observable<CompetitionDto> {
-    return this.http.put<CompetitionDto>(`${this.baseUrl}/${id}`, request);
+  updateCompetition(id: string, request: UpdateCompetitionRequestDto): Observable<BaseResponseDto<CompetitionDto>> {
+    return this.http.put<BaseResponseDto<CompetitionDto>>(`${this.baseUrl}/${id}`, request);
   }
 
   updateCompetitionParams(id: string, request: string): Observable<CompetitionDto> {

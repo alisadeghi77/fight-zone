@@ -86,7 +86,7 @@ export class ManagementLayoutComponent implements AfterViewInit {
   }
 
   logout() {
-    debugger;
+
     this.authService.logout();
     this.router.navigate(['/auth/login']);
   }

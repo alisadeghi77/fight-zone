@@ -19,8 +19,8 @@ import * as moment from 'jalali-moment';
 export class DatePickerComponent {
     @Output() dateChange = new EventEmitter<string>();
     @Input() set dateInput(value: string) {
-        if (value && value.length === 10 && value != this.gregorianDate) {
-            this.setPersianDate(value);
+        if (value && value != this.gregorianDate) {
+            this.setGregorianDate(value);
         }
     }
 

@@ -7,37 +7,27 @@ export interface BaseResponseDto<T> {
 export interface CompetitionDto {
     id: string;
     title: string;
-    manager: string;
-    gender: string;
-    canRegister: boolean;
-    bannerImage: string;
-    price: number;
+    bannerImageId: number;
+    licenseImageId: number;
+    registerParams: string;
     date: string;
-    award: number;
-    location: string;
+    address: string;
 }
 
 export interface CreateCompetitionRequestDto {
     title: string;
-    manager: string;
-    gender: string;
+    licenseImageId: number;
     canRegister: boolean;
-    bannerImage: string;
-    price: number;
+    bannerImageId: number;
     date: string;
-    award: number;
     location: string;
 }
 
 export interface UpdateCompetitionRequestDto {
     id: string;
     title: string;
-    manager: string;
-    gender: string;
-    canRegister: boolean;
-    bannerImage: string;
-    price: number;
+    licenseImageId: number;
+    bannerImageId: number;
     date: string;
-    award: number;
-    location: string;
+    address: string;
 }
