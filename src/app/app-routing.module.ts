@@ -13,6 +13,10 @@ const routes: Routes = [
     loadChildren: () => import('./management/management-module').then(m => m.ManagementModule)
   },
   {
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+  },
+  {
     path: 'admin',
     component: ManagementLayoutComponent,
     children: [
@@ -43,10 +47,7 @@ const routes: Routes = [
     path: 'guest',
     component: GuestComponent,
     children: [
-      {
-        path: 'login',
-        loadComponent: () => import('./demo/pages/authentication/login/login.component').then((c) => c.LoginComponent)
-      },
+      
       {
         path: 'register',
         loadComponent: () => import('./demo/pages/authentication/register/register.component').then((c) => c.RegisterComponent)

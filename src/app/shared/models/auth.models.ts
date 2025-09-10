@@ -1,11 +1,21 @@
 export interface LoginRequestDto {
-    username: string;
-    password: string;
+    phoneNumber: string;
 }
 
 export interface LoginResponseDto {
+    message: string;
+    success: boolean;
+}
+
+export interface VerifyOtpRequestDto {
+    phoneNumber: string;
+    otpCode: string;
+}
+
+export interface VerifyOtpResponseDto {
     token: string;
-    expiresIn: number;
+    userName: string;
+    fullName: string;
 }
 
 export interface RefreshTokenResponseDto {

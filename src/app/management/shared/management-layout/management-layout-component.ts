@@ -2,7 +2,7 @@
 // Angular import
 import { AfterViewInit, Component, inject } from '@angular/core';
 import { CommonModule, Location, LocationStrategy } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 
 // Project import
@@ -10,6 +10,7 @@ import { ProjectThemConfig } from 'src/app/app-config';
 import { NavigationComponent } from '../navigation/navigation.component';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumbs/breadcrumbs.component';
+import { AuthService } from '../../../shared/services/auth.service';
 
 
 
@@ -22,6 +23,8 @@ import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumbs
 export class ManagementLayoutComponent implements AfterViewInit {
   private location = inject(Location);
   private locationStrategy = inject(LocationStrategy);
+  private router = inject(Router);
+  private authService = inject(AuthService);
   cdr = inject(ChangeDetectorRef);
 
   // public props
@@ -80,5 +83,15 @@ export class ManagementLayoutComponent implements AfterViewInit {
     if (document.querySelector('app-navigation.pc-sidebar')?.classList.contains('mob-open')) {
       document.querySelector('app-navigation.pc-sidebar')?.classList.remove('mob-open');
     }
+  }
+
+  logout() {
+    debugger;
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
+  }
+
+  getCurrentUser() {
+    return this.authService.getCurrentUser();
   }
 }

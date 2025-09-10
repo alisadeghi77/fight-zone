@@ -1,0 +1,51 @@
+<div class="auth-main" style="direction: rtl;">
+  <div class="auth-wrapper v3">
+    <div class="auth-form">
+      <div class="card my-5">
+        <div class="card-body">
+          <!-- <a href="#" class="d-flex justify-content-center">
+            <img src="assets/images/logo-dark.svg" alt="logo" />
+          </a> -->
+          <h5 class="my-4 d-flex justify-content-center">ورود با شماره موبایل</h5>
+          
+          <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+            {{ errorMessage }}
+          </div>
+
+          <div class="form-floating mb-3">
+            <input 
+              type="text" 
+              class="form-control" 
+              id="floatingInput" 
+              [(ngModel)]="phoneNumber"
+              (input)="onPhoneNumberInput($event)"
+              [disabled]="isOtpSent"
+              placeholder="شماره موبایل" />
+            <label for="floatingInput">شماره موبایل</label>
+          </div>
+
+          <div class="form-floating mb-3" *ngIf="isOtpSent">
+            <input 
+              type="text" 
+              class="form-control" 
+              id="otpInput" 
+              [(ngModel)]="otp"
+              (input)="onOtpInput($event)"
+              placeholder="کد تأیید" />
+            <label for="otpInput">کد تأیید</label>
+          </div>
+
+          <div class="d-grid mt-4">
+            <button 
+              type="button" 
+              class="btn btn-secondary"
+              (click)="onSubmit()">
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              {{ getButtonText() }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+.form-floating {
+  > label {
+    right: 0px !important;
+    transform: scale(0.85) translateY(-0.5rem) translateX(5rem);
+  }
+  > input {
+    text-align: left;
+  }
+}

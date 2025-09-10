@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { LoginRequestDto, LoginResponseDto, RefreshTokenResponseDto } from '../models/auth.models';
+import { LoginRequestDto, LoginResponseDto, VerifyOtpRequestDto, VerifyOtpResponseDto, RefreshTokenResponseDto } from '../models/auth.models';
 import { environment } from 'src/environments/environment';
+import { BaseResponseDto } from '../models/competition.models';
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +13,15 @@ export class AuthHttpService {
 
   constructor(private http: HttpClient) { }
 
-  login(request: LoginRequestDto): Observable<LoginResponseDto> {
-    return this.http.post<LoginResponseDto>(`${this.baseUrl}/login`, request);
+  login(request: LoginRequestDto): Observable<BaseResponseDto<LoginResponseDto>> {
+    return this.http.post<BaseResponseDto<LoginResponseDto>>(`${this.baseUrl}/login`, request);
   }
 
-  refreshToken(): Observable<RefreshTokenResponseDto> {
-    return this.http.post<RefreshTokenResponseDto>(`${this.baseUrl}/refresh-token`, {});
+  verify(request: VerifyOtpRequestDto): Observable<BaseResponseDto<VerifyOtpResponseDto>> {
+    return this.http.post<BaseResponseDto<VerifyOtpResponseDto>>(`${this.baseUrl}/verify`, request);
   }
 
-  logout(): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/logout`, {});
+  me(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/me`, {});
   }
 }
