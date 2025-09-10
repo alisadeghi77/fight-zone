@@ -18,6 +18,7 @@ import { DatePickerComponent } from 'src/app/theme/shared/components/date-picker
 export class CompetitionInsertUpdate implements OnInit {
   @Input() competition?: CompetitionDto; // if passed = edit mode
   form!: FormGroup;
+  jsonForm!: FormGroup;
   isEdit = false;
   message = '';
   competitionId?: string;
@@ -39,6 +40,10 @@ export class CompetitionInsertUpdate implements OnInit {
       bannerFileId: [''],
       competitionDate: ['', Validators.required],
       competitionAddress: ['', Validators.required]
+    });
+
+    this.jsonForm = this.fb.group({
+      jsonParams: ['', this.jsonValidator]
     });
 
     this.route.paramMap
@@ -78,6 +83,49 @@ export class CompetitionInsertUpdate implements OnInit {
     this.form.patchValue({
       competitionDate: gregorianDate
     });
+  }
+
+  // JSON validator function
+  jsonValidator(control: any) {
+    if (!control.value || control.value.trim() === '') {
+      return null; // No error for empty values
+    }
+    
+    try {
+      JSON.parse(control.value);
+      return null; // Valid JSON
+    } catch (error) {
+      return { invalidJson: true }; // Invalid JSON
+    }
+  }
+
+  updateCompetitionParams(): void {
+    if (!this.competitionId) {
+      this.message = 'Competition ID not found';
+      return;
+    }
+
+    if (this.jsonForm.invalid) {
+      this.message = 'Please fix JSON errors before updating';
+      return;
+    }
+
+    const jsonParams = this.jsonForm.get('jsonParams')?.value;
+    if (!jsonParams || !jsonParams.trim()) {
+      this.message = 'Please enter JSON parameters';
+      return;
+    }
+
+    this.competitionService.updateCompetitionParams(this.competitionId, jsonParams)
+      .subscribe({
+        next: () => {
+          this.message = 'Competition parameters updated successfully ✅';
+        },
+        error: (error) => {
+          this.message = 'Error updating competition parameters ❌';
+          console.error('Error:', error);
+        }
+      });
   }
 
   save(): void {

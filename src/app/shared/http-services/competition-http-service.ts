@@ -28,6 +28,10 @@ export class CompetitionHttpService {
     return this.http.put<CompetitionDto>(`${this.baseUrl}/${id}`, request);
   }
 
+  updateCompetitionParams(id: string, request: string): Observable<CompetitionDto> {
+    return this.http.put<CompetitionDto>(`${this.baseUrl}/${id}`, request);
+  }
+
   deleteCompetition(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
