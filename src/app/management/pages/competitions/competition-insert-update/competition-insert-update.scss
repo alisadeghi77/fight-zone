@@ -1,0 +1,12 @@
+.tab-content {
+    margin: 0px !important;
+}
+
+
+.nav-link {
+    color: black !important;
+
+    &.disabled {
+        color: #7e7d7d !important;
+    }
+}

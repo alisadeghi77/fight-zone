@@ -5,7 +5,7 @@
                 <label for="table-filtering-search" class=" col-form-label">
                     جستجو:</label>
                 <div class="">
-                    <input id="table-filtering-search" class="form-control" type="text" />
+                    <input id="table-filtering-search"  [formControl]="input" class="form-control" type="text" />
                 </div>
             </form>
             <a href="/management/competitions/new" class="btn btn-small btn-primary">مسابقه جدید</a>
@@ -21,14 +21,15 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">عنوان</th>
-                        <th scope="col">برگزار کننده</th>
+                        <th scope="col">مکان برگزاری</th>
                         <th scope="col">وضعیت ثبت نام</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for (competition of competitions; track competition.id; let i = $index) {
-                    <tr>
-                        <th scope="row">{{ competition.id }}</th>
+                    @for (competition of filteredDate; track competition.id) {
+                    <tr scope="row" class="">
+                        <td  >{{ competition.id }}</td>
                         <td>
                             {{competition.title}}
                         </td>
@@ -37,6 +38,12 @@
                         </td>
                         <td>
                             {{competition.date}}
+                        </td>
+
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary" routerLink="edit/{{competition.id}}">
+                                <i class="ti ti-edit"></i>
+                            </a>
                         </td>
                     </tr>
                     } @empty {

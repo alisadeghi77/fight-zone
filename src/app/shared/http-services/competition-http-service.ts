@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { BaseResponseDto, CompetitionDto, CreateCompetitionRequestDto, UpdateCompetitionRequestDto } from '../models/competition.models';
+import { CompetitionDto, CreateCompetitionRequestDto, UpdateCompetitionRequestDto } from '../models/competition.models';
+import { BaseResponseModel } from "../models/base-response.model";
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -12,20 +13,20 @@ export class CompetitionHttpService {
 
   constructor(private http: HttpClient) { }
 
-  getCompetitions(): Observable<BaseResponseDto<CompetitionDto[]>> {
-    return this.http.get<BaseResponseDto<CompetitionDto[]>>(`${this.baseUrl}`);
+  getCompetitions(): Observable<BaseResponseModel<CompetitionDto[]>> {
+    return this.http.get<BaseResponseModel<CompetitionDto[]>>(`${this.baseUrl}`);
   }
 
-  getCompetitionById(id: string): Observable<BaseResponseDto<CompetitionDto>> {
-    return this.http.get<BaseResponseDto<CompetitionDto>>(`${this.baseUrl}/${id}`);
+  getCompetitionById(id: string): Observable<BaseResponseModel<CompetitionDto>> {
+    return this.http.get<BaseResponseModel<CompetitionDto>>(`${this.baseUrl}/${id}`);
   }
 
-  createCompetition(request: CreateCompetitionRequestDto): Observable<BaseResponseDto<CompetitionDto>> {
-    return this.http.post<BaseResponseDto<CompetitionDto>>(`${this.baseUrl}`, request);
+  createCompetition(request: CreateCompetitionRequestDto): Observable<BaseResponseModel<CompetitionDto>> {
+    return this.http.post<BaseResponseModel<CompetitionDto>>(`${this.baseUrl}`, request);
   }
 
-  updateCompetition(id: string, request: UpdateCompetitionRequestDto): Observable<BaseResponseDto<CompetitionDto>> {
-    return this.http.put<BaseResponseDto<CompetitionDto>>(`${this.baseUrl}/${id}`, request);
+  updateCompetition(request: UpdateCompetitionRequestDto): Observable<BaseResponseModel<CompetitionDto>> {
+    return this.http.put<BaseResponseModel<CompetitionDto>>(`${this.baseUrl}`, request);
   }
 
   updateCompetitionParams(id: string, request: string): Observable<CompetitionDto> {

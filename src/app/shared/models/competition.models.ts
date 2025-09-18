@@ -1,9 +1,3 @@
-export interface BaseResponseDto<T> {
-    data: T, 
-    status: number, 
-    errorMessages: string[] 
-}
-
 export interface CompetitionDto {
     id: string;
     title: string;
@@ -17,10 +11,9 @@ export interface CompetitionDto {
 export interface CreateCompetitionRequestDto {
     title: string;
     licenseImageId: number;
-    canRegister: boolean;
     bannerImageId: number;
     date: string;
-    location: string;
+    address: string;
 }
 
 export interface UpdateCompetitionRequestDto {

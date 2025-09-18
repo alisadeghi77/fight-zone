@@ -1,17 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { debounceTime, switchMap } from 'rxjs';
 import { CompetitionHttpService } from 'src/app/shared/http-services/competition-http-service';
-import { BaseResponseDto, CompetitionDto } from 'src/app/shared/models/competition.models';
+import { CompetitionDto } from 'src/app/shared/models/competition.models';
+import { BaseResponseModel } from "src/app/shared/models/base-response.model";
 import { FileUploadComponent } from 'src/app/theme/shared/components/file-upload/file-upload.component';
 import { DatePickerComponent } from 'src/app/theme/shared/components/date-picker/date-picker.component';
+import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { ParticipantsHttpService } from 'src/app/shared/http-services/participants-http-service';
+import { ParticipantDto, RegisterStatus } from 'src/app/shared/models/participant.models';
 
 @Component({
   selector: 'app-competition-insert-update',
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, FileUploadComponent, DatePickerComponent],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, FileUploadComponent, DatePickerComponent, NgbNavModule],
   templateUrl: './competition-insert-update.html',
   styleUrl: './competition-insert-update.scss'
 })
@@ -19,6 +23,7 @@ export class CompetitionInsertUpdate implements OnInit {
   @Input() competition?: CompetitionDto; // if passed = edit mode
   form!: FormGroup;
   jsonForm!: FormGroup;
+  active = 1;
   isEdit = false;
   message = '';
   competitionId?: string;
@@ -26,6 +31,7 @@ export class CompetitionInsertUpdate implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private participantsHttpService: ParticipantsHttpService,
     private competitionService: CompetitionHttpService,
     private route: ActivatedRoute,
     private router: Router
@@ -34,11 +40,11 @@ export class CompetitionInsertUpdate implements OnInit {
   ngOnInit(): void {
 
     this.form = this.fb.group({
-      competitionTitle: ['', Validators.required],
-      licenseFileId: [''],
-      bannerFileId: [''],
-      competitionDate: ['', Validators.required],
-      competitionAddress: ['', Validators.required]
+      title: ['', Validators.required],
+      licenseImageId: [''],
+      bannerImageId: [''],
+      date: ['', Validators.required],
+      address: ['', Validators.required]
     });
 
     this.jsonForm = this.fb.group({
@@ -58,15 +64,15 @@ export class CompetitionInsertUpdate implements OnInit {
         })
       )
       .subscribe({
-        next: (response: BaseResponseDto<CompetitionDto>) => {
+        next: (response: BaseResponseModel<CompetitionDto>) => {
           const competition = response.data;
           if (response) {
             this.form.patchValue({
-              competitionTitle: competition.title,
-              competitionAddress: competition.address,
-              competitionDate: competition.date,
-              bannerFileId: competition.bannerImageId,
-              licenseFileId: competition.licenseImageId,
+              title: competition.title,
+              address: competition.address,
+              date: competition.date,
+              bannerImageId: competition.bannerImageId,
+              licenseImageId: competition.licenseImageId,
             });
             this.jsonForm.patchValue({
               jsonParams: competition.registerParams
@@ -75,6 +81,8 @@ export class CompetitionInsertUpdate implements OnInit {
         },
         error: (response) => (this.message = response.error.errorMessages[0].message)
       });
+
+    this.loadParticipants();
   }
 
   onFileUploaded(event: any, field: string): void {
@@ -94,7 +102,7 @@ export class CompetitionInsertUpdate implements OnInit {
     if (!control.value || control.value.trim() === '') {
       return null; // No error for empty values
     }
-    
+
     try {
       JSON.parse(control.value);
       return null; // Valid JSON
@@ -139,11 +147,10 @@ export class CompetitionInsertUpdate implements OnInit {
     }
 
     if (this.isEdit && this.competitionId) {
-      this.competitionService.updateCompetition(this.competitionId, this.form.value)
+      this.competitionService.updateCompetition({ id: this.competitionId, ...this.form.value })
         .subscribe({
           next: () => {
             this.message = 'Competition updated successfully ✅';
-            this.router.navigate(['/competitions']);
           },
           error: () => this.message = 'Error updating competition ❌'
         });
@@ -156,5 +163,26 @@ export class CompetitionInsertUpdate implements OnInit {
           error: (response) => this.message = response.error.errorMessages[0].message || 'Error creating competition ❌'
         });
     }
+  }
+
+  participantsInput = new FormControl('');
+  participantsFilteredData: ParticipantDto[] = [];
+  participantsData: ParticipantDto[] = [];
+  registerStatus = RegisterStatus;
+  loadParticipants(): void {
+
+    this.participantsInput.valueChanges.pipe(debounceTime(300)).subscribe(value => {
+      this.participantsFilteredData = value ?
+        this.participantsData
+          .filter(f => f.coachPhoneNumber.toLocaleLowerCase().includes(value.toLocaleLowerCase()) || f.coachFullName.toLocaleLowerCase().includes(value.toLocaleLowerCase()) || f.participantFullName.toLocaleLowerCase().includes(value.toLocaleLowerCase()) || f.participantPhoneNumber.toLocaleLowerCase().includes(value.toLocaleLowerCase())) :
+        this.participantsData;
+    });
+
+    this.participantsHttpService.getParticipants(this.competitionId)
+      .subscribe(response => {
+        this.participantsData = response.data
+        this.participantsFilteredData = response.data
+      });
+
   }
 }

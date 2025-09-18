@@ -1,76 +1,163 @@
-<div class="card shadow-sm p-3">
-    <h5 class="card-title mb-3">
-        {{ isEdit ? 'ویرایش مسابقه' : 'ایجاد مسابقه' }}
-    </h5>
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+    <li [ngbNavItem]="1">
+        <button ngbNavLink>
+            {{ isEdit ? 'ویرایش مسابقه' : 'ایجاد مسابقه' }}
+        </button>
+        <ng-template ngbNavContent>
+            <div class="card shadow-sm p-3">
+                <h5 class="card-title mb-3">
+                </h5>
 
-    <form class="row" [formGroup]="form" (ngSubmit)="save()">
-        <div class="mb-3 col-6">
-            <label class="form-label">عنوان</label>
-            <input type="text" formControlName="competitionTitle" class="form-control">
-        </div>
+                <form class="row" [formGroup]="form" (ngSubmit)="save()">
+                    <div class="mb-3 col-6">
+                        <label class="form-label">عنوان</label>
+                        <input type="text" formControlName="title" class="form-control">
+                    </div>
 
-        <div class="mb-3 col-6">
-            <label class="form-label">تاریخ</label>
-            <app-date-picker [dateInput]="this.form.get('competitionDate')?.value"
-                (dateChange)="onDateChange($event)" />
-        </div>
+                    <div class="mb-3 col-6">
+                        <label class="form-label">تاریخ</label>
+                        <app-date-picker [dateInput]="this.form.get('date')?.value"
+                            (dateChange)="onDateChange($event)" />
+                    </div>
 
 
-        <div class="mb-3 col-6">
-            <label class="form-label">محل برگزاری</label>
-            <input type="text" formControlName="competitionAddress" class="form-control">
-        </div>
+                    <div class="mb-3 col-6">
+                        <label class="form-label">محل برگزاری</label>
+                        <input type="text" formControlName="address" class="form-control">
+                    </div>
 
-        <div class="mb-3 col-3">
-            <label class="form-label">بنر</label>
-            <app-file-upload [uploadedFileId]="form.get('bannerFileId')?.value"
-                (fileUploaded)="onFileUploaded($event,'bannerFileId')" />
-        </div>
+                    <div class="mb-3 col-3">
+                        <label class="form-label">بنر</label>
+                        <app-file-upload [uploadedFileId]="form.get('bannerImageId')?.value"
+                            (fileUploaded)="onFileUploaded($event,'bannerImageId')" />
+                    </div>
 
-        <div class="mb-3 col-3">
-            <label class="form-label">گواهی برگزاری</label>
-            <app-file-upload [uploadedFileId]="form.get('licenseFileId')?.value"
-                (fileUploaded)="onFileUploaded($event,'licenseFileId')" />
-        </div>
+                    <div class="mb-3 col-3">
+                        <label class="form-label">گواهی برگزاری</label>
+                        <app-file-upload [uploadedFileId]="form.get('licenseImageId')?.value"
+                            (fileUploaded)="onFileUploaded($event,'licenseImageId')" />
+                    </div>
 
-        <div class="mb-3 form-check col-12 d-flex justify-content-start align-items-start">
-            <button type="submit" class="btn btn-primary ">
-                {{ isEdit ? 'ویرایش' : 'ایجاد' }}
-            </button>
-        </div>
-    </form>
+                    <div class="mb-3 form-check col-12 d-flex justify-content-start align-items-start">
+                        <button type="submit" class="btn btn-primary ">
+                            {{ isEdit ? 'ویرایش' : 'ایجاد' }}
+                        </button>
+                    </div>
+                </form>
 
-    <div *ngIf="message" class="mt-3 alert alert-info text-center   ">
-        {{ message }}
-    </div>
-</div>
-
-<div class="card shadow-sm p-3" *ngIf="isEdit">
-    <h5 class="card-title mb-3">
-        اطلاعات جداول
-    </h5>
-    <div class="card-body">
-        <form [formGroup]="jsonForm">
-            <div class="mb-3">
-                <label class="form-label">رده وزنی مسابقه</label>
-                <textarea class="form-control" formControlName="jsonParams"
-                    placeholder='{"key": "value", "settings": {"option1": true, "option2": "text"}}'
-                    [class.is-invalid]="jsonForm.get('jsonParams')?.invalid && jsonForm.get('jsonParams')?.touched">
-                </textarea>
-                <div class="invalid-feedback" *ngIf="jsonForm.get('jsonParams')?.errors?.['invalidJson']">
-                    Invalid JSON format
+                <div *ngIf="message" class="mt-3 alert alert-info text-center   ">
+                    {{ message }}
                 </div>
-                <small class="text-muted">
-                    Enter valid JSON parameters for the competition
-                </small>
             </div>
-            <div class="d-flex justify-content-start">
-                <button type="button" class="btn btn-primary" (click)="updateCompetitionParams()"
-                    [disabled]="jsonForm.invalid || !jsonForm.get('jsonParams')?.value?.trim()">
-                    <i class="ti ti-upload me-1"></i>
-                    ویرایش رده وزنی مسابقه
-                </button>
+        </ng-template>
+    </li>
+    <li [ngbNavItem]="2" [disabled]="!isEdit">
+        <button ngbNavLink>تنظیمات اوزان</button>
+        <ng-template ngbNavContent>
+            <div class="card shadow-sm p-3" *ngIf="isEdit">
+                <h5 class="card-title mb-3">
+                    اطلاعات جداول
+                </h5>
+                <div class="card-body">
+                    <form [formGroup]="jsonForm">
+                        <div class="mb-3">
+                            <label class="form-label">رده وزنی مسابقه</label>
+                            <textarea class="form-control" formControlName="jsonParams"
+                                placeholder='{"key": "value", "settings": {"option1": true, "option2": "text"}}'
+                                [class.is-invalid]="jsonForm.get('jsonParams')?.invalid && jsonForm.get('jsonParams')?.touched">
+                </textarea>
+                            <div class="invalid-feedback" *ngIf="jsonForm.get('jsonParams')?.errors?.['invalidJson']">
+                                Invalid JSON format
+                            </div>
+                            <small class="text-muted">
+                                Enter valid JSON parameters for the competition
+                            </small>
+                        </div>
+                        <div class="d-flex justify-content-start">
+                            <button type="button" class="btn btn-primary" (click)="updateCompetitionParams()"
+                                [disabled]="jsonForm.invalid || !jsonForm.get('jsonParams')?.value?.trim()">
+                                <i class="ti ti-upload me-1"></i>
+                                ویرایش رده وزنی مسابقه
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
-    </div>
-</div>
+        </ng-template>
+    </li>
+    <li [ngbNavItem]="3" [disabled]="!isEdit">
+        <button ngbNavLink>ثبت نام</button>
+        <ng-template ngbNavContent>
+            <div class="card">
+                <div class="card-body">
+                    <div class="justify-content-between d-flex">
+                        <form class="d-flex">
+                            <label for="table-filtering-search" class=" col-form-label">
+                                جستجو:</label>
+                            <div class="">
+                                <input id="table-filtering-search" [formControl]="participantsInput"
+                                    class="form-control" type="text" />
+                            </div>
+                        </form>
+                        <a href="/management/competitions/new" class="btn btn-small btn-primary">مسابقه جدید</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+
+                        <table class="table table-hover table-light border table-border ">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">نام</th>
+                                    <th scope="col">شماره تلفن</th>
+                                    <th scope="col">نام مربی</th>
+                                    <th scope="col">تلفن مربی</th>
+                                    <th scope="col">وضعیت</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (participant of participantsFilteredData; track participant.id) {
+                                <tr scope="row" class="">
+                                    <td>{{ participant.id }}</td>
+                                    <td>
+                                        {{participant.participantFullName}}
+                                    </td>
+                                    <td>
+                                        {{participant.participantPhoneNumber}}
+                                    </td>
+                                    <td>
+                                        {{participant.coachFullName}}
+                                    </td>
+                                    <td>
+                                        {{participant.coachPhoneNumber}}
+                                    </td>
+
+                                    <td>
+                                        {{ registerStatus[participant.status]}}
+                                    </td>
+
+                                    <td>
+                                        <a class="btn btn-sm btn-outline-primary">
+                                            <i class="ti ti-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                } @empty {
+                                <tr>
+                                    <td colspan="7" style="text-align: center">رکوردی وجود ندارد</td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </li>
+</ul>
+
+<div [ngbNavOutlet]="nav" class="mt-2"></div>

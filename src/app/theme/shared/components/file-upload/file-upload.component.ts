@@ -4,7 +4,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FilesHttpService } from 'src/app/shared/http-services/files-http-service';
 import { FileUploadResponseDto } from 'src/app/shared/models/files.models';
 import { environment } from 'src/environments/environment';
-import { BaseResponseDto } from 'src/app/shared/models/competition.models';
+import { BaseResponseModel } from "src/app/shared/models/base-response.model";
 
 @Component({
   selector: 'app-file-upload',
@@ -79,7 +79,7 @@ export class FileUploadComponent {
     this.errorMessage = '';
 
     this.filesHttpService.uploadFile(this.selectedFile).subscribe({
-      next: (response: BaseResponseDto<FileUploadResponseDto>) => {
+      next: (response: BaseResponseModel<FileUploadResponseDto>) => {
     
         this.uploadedFileId = parseInt(response.data.id);
         this.isUploading = false;
