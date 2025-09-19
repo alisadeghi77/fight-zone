@@ -88,8 +88,46 @@
     <li [ngbNavItem]="3" [disabled]="!isEdit">
         <button ngbNavLink>ثبت نام</button>
         <ng-template ngbNavContent>
-            <div class="card">
+            <div class="card shadow-sm mb-3">
                 <div class="card-body">
+                    <form class="row" [formGroup]="participantForm" (ngSubmit)="registerParticipant()">
+                        <div class="mb-3 col-3">
+                            <label class="form-label">موبایل</label>
+                            <app-search-user-by-role-componenet (valueChange)="onParticipantChanged($event)"
+                                [role]="'PARTICIPANT'" />
+                        </div>
+                        <div class="mb-3 col-2">
+                            <label class="form-label">نام </label>
+                            <input type="text" id="firstName" formControlName="firstName" class="form-control"
+                                [class.is-invalid]="participantForm.get('firstName')?.invalid && participantForm.get('firstName')?.touched">
+                        </div>
+
+                        <div class="mb-3 col-2">
+                            <label class="form-label">نام خانوادگی </label>
+                            <input type="text" id="lastName" formControlName="lastName" class="form-control"
+                                [class.is-invalid]="participantForm.get('lastName')?.invalid && participantForm.get('lastName')?.touched">
+                        </div>
+
+                        <div class="mb-3 col-3">
+                            <label class="form-label">موبایل مربی</label>
+                            <app-search-user-by-role-componenet (valueChange)="onCoachChanged($event)"
+                                [role]="'COACH'" />
+                        </div>
+
+
+                        <div class="mb-3 col-2 d-flex align-items-start justify-content-start">
+                            <button type="submit" class="btn btn-success" [disabled]="participantForm.invalid">
+                                <i class="ti ti-user-plus me-1"></i>
+                                ثبت نام
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Search and Actions -->
+            <div class="card">
+                <div class="card-header">
                     <div class="justify-content-between d-flex">
                         <form class="d-flex">
                             <label for="table-filtering-search" class=" col-form-label">
@@ -99,11 +137,8 @@
                                     class="form-control" type="text" />
                             </div>
                         </form>
-                        <a href="/management/competitions/new" class="btn btn-small btn-primary">مسابقه جدید</a>
                     </div>
                 </div>
-            </div>
-            <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
 

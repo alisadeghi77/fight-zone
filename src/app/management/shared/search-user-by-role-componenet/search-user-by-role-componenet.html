@@ -1,0 +1,4 @@
+<form [formGroup]="form">
+    <input id="searchInput" type="text" class="form-control" formControlName="searchInput" [ngbTypeahead]="search" #searchUser
+        [resultFormatter]="resultFormatter" [inputFormatter]="inputFormatter" (selectItem)="onSelect($event)" />
+</form>

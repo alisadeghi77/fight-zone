@@ -20,3 +20,15 @@ export interface ParticipantDto {
     status?: RegisterStatus;
     participantParam?: ParticipantParam[];
 }
+
+
+export interface CreateParticipantRequestByAdminDto {
+    participantId:string,
+    phoneNumber:string,
+    firstName:string,
+    lastName:string,
+    coachId:string,
+    coachPhoneNumber:string,
+    competitionId:number,
+    params : ParticipantParam[]
+}
