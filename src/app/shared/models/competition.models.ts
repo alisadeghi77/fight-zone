@@ -3,10 +3,23 @@ export interface CompetitionDto {
     title: string;
     bannerImageId: number;
     licenseImageId: number;
-    registerParams: string;
+    registerParams: CompetitionParam;
     date: string;
     address: string;
 }
+
+export interface CompetitionParam {
+  key: string;
+  title: string;
+  values?: CompetitionParamValue[];
+}
+
+export interface CompetitionParamValue {
+  key: string;
+  title: string;
+  params?: CompetitionParam[];
+}
+
 
 export interface CreateCompetitionRequestDto {
     title: string;
