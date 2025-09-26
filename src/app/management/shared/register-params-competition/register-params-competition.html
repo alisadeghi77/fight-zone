@@ -1,12 +1,12 @@
 <form [formGroup]="form" class="row g-3">
-  <div *ngFor="let param of currentParams" class="col-md-4">
-    <label class="form-label">{{ param.title }}</label>
+  <div *ngFor="let node of currentNodes" class="col-md-4">
+    <label class="form-label">{{ node.param.title }}</label>
     <select
       class="form-select"
-      [formControlName]="param.key"
-      (change)="onSelectChange(param, $event)">
-      <option value="" disabled selected>-- Select {{ param.title }} --</option>
-      <option *ngFor="let v of param.values" [value]="v.key">
+      [formControlName]="node.param.key"
+      (change)="onSelectChange(node.param, $event)">
+      <option value="" disabled selected>-- Select {{ node.param.title }} --</option>
+      <option *ngFor="let v of node.param.values" [value]="v.key">
         {{ v.title }}
       </option>
     </select>

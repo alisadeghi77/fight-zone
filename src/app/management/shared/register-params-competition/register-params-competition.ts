@@ -3,9 +3,15 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { start } from '@popperjs/core';
-import { debounceTime, distinctUntilChanged, map, Observable, startWith, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, Observable, startWith, Subscription, switchMap } from 'rxjs';
 import { CompetitionParam, CompetitionParamValue } from 'src/app/shared/models/competition.models';
 import { MinimalUserDto } from 'src/app/shared/models/user.models';
+
+
+interface CurrentNode {
+  param: CompetitionParam;
+  ancestors: string[]; // keys of ancestor params (closest parent last)
+}
 
 @Component({
   selector: 'app-register-params-competition',
@@ -19,7 +25,7 @@ import { MinimalUserDto } from 'src/app/shared/models/user.models';
   styleUrl: './register-params-competition.scss'
 })
 export class RegisterParamsCompetitionComponent implements OnChanges {
-  private _paramData!: CompetitionParam;
+   private _paramData!: CompetitionParam;
 
   @Input()
   set paramData(value: CompetitionParam) {
@@ -35,9 +41,10 @@ export class RegisterParamsCompetitionComponent implements OnChanges {
   @Output() selectionChange = new EventEmitter<{ key: string; value: string }[]>();
 
   form!: FormGroup;
-  currentParams: CompetitionParam[] = [];
+  currentNodes: CurrentNode[] = [];
+  private formValueSub?: Subscription;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['paramData'] && this.paramData) {
@@ -45,58 +52,88 @@ export class RegisterParamsCompetitionComponent implements OnChanges {
     }
   }
 
+  ngOnDestroy(): void {
+    this.formValueSub?.unsubscribe();
+  }
+
   private buildForm(): void {
-    if (!this.paramData) return;
+    // unsubscribe previous subscription if exists
+    this.formValueSub?.unsubscribe();
 
+    if (!this.paramData) {
+      this.form = this.fb.group({});
+      this.currentNodes = [];
+      return;
+    }
+
+    // create a fresh form and initial node list (root param)
     this.form = this.fb.group({});
-    this.currentParams = [this.paramData];
-    this.addControl(this.paramData);
+    this.currentNodes = [{ param: this.paramData, ancestors: [] }];
 
-    this.form.valueChanges.subscribe(() => {
-      const selected = this.getSelections();
-      this.selectionChange.emit(selected);
+    // ensure root control exists
+    if (!this.form.contains(this.paramData.key)) {
+      this.form.addControl(this.paramData.key, this.fb.control(''));
+    }
+
+    // emit flatten selection on value changes
+    this.formValueSub = this.form.valueChanges.subscribe(() => {
+      this.selectionChange.emit(this.getSelections());
     });
   }
 
-  private addControl(param: CompetitionParam): void {
-    this.form.addControl(param.key, this.fb.control(''));
-  }
-
+  // ---- FIXED onSelectChange (see explanation above) ----
   onSelectChange(param: CompetitionParam, event: any): void {
-    debugger
-    const valueKey = event.target.value
-    // Remove deeper params if parent changes
-    const index = this.currentParams.findIndex(p => p.key === param.key);
-    this.currentParams = this.currentParams.slice(0, index + 1);
+    const valueKey = event?.target ? event.target.value : event;
 
-    // Reset deeper controls
-    Object.keys(this.form.controls).forEach(key => {
-      if (!this.currentParams.find(p => p.key === key)) {
-        this.form.removeControl(key);
+    // find the metadata node for this param
+    const node = this.currentNodes.find(n => n.param.key === param.key);
+    if (!node) return;
+
+    // 1) remove descendant nodes (those whose ancestors include this param.key)
+    const descendants = this.currentNodes.filter(n => n.ancestors.includes(param.key));
+    descendants.forEach(d => {
+      if (this.form.contains(d.param.key)) {
+        this.form.removeControl(d.param.key);
       }
     });
 
-    // Add children if available
+    // keep only nodes that are NOT descendants (and keep the current node itself)
+    this.currentNodes = this.currentNodes.filter(n => !n.ancestors.includes(param.key));
+
+    // 2) add new children (if the newly selected value exposes params)
     const selectedValue = param.values?.find(v => v.key === valueKey);
     if (selectedValue?.params) {
-      selectedValue.params.forEach(child => {
-        this.currentParams.push(child);
-        this.addControl(child);
+      selectedValue.params.forEach(childParam => {
+        const childNode: CurrentNode = {
+          param: childParam,
+          ancestors: [...node.ancestors, param.key]
+        };
+
+        // avoid duplicates
+        const exists = this.currentNodes.some(n =>
+          n.param.key === childNode.param.key &&
+          n.ancestors.join('|') === childNode.ancestors.join('|')
+        );
+        if (!exists) {
+          this.currentNodes.push(childNode);
+          if (!this.form.contains(childParam.key)) {
+            this.form.addControl(childParam.key, this.fb.control(''));
+          }
+          // reset its value without triggering form.valueChanges
+          this.form.get(childParam.key)?.setValue('', { emitEvent: false });
+        }
       });
     }
 
-    // Reset children values
-    this.form.patchValue(
-      this.currentParams.reduce((acc, p) => ({ ...acc, [p.key]: this.form.get(p.key)?.value || '' }), {}),
-      { emitEvent: true }
-    );
+    // emit current selections (we used emitEvent:false above, so emit explicitly)
+    this.selectionChange.emit(this.getSelections());
   }
 
   private getSelections(): { key: string; value: string }[] {
-    return this.currentParams
-      .map(p => {
-        const val = this.form.get(p.key)?.value;
-        return val ? { key: p.key, value: val } : null;
+    return this.currentNodes
+      .map(n => {
+        const val = this.form.get(n.param.key)?.value;
+        return val ? { key: n.param.key, value: val } : null;
       })
       .filter((x): x is { key: string; value: string } => !!x);
   }

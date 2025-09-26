@@ -15,10 +15,11 @@ import { CreateParticipantRequestByAdminDto, ParticipantDto, RegisterStatus } fr
 import { UserHttpService } from 'src/app/shared/http-services/user-http-service';
 import { MinimalUserDto } from 'src/app/shared/models/user.models';
 import { SearchUserByRoleComponenet } from 'src/app/management/shared/search-user-by-role-componenet/search-user-by-role-componenet';
+import { RegisterParamsCompetitionComponent } from 'src/app/management/shared/register-params-competition/register-params-competition';
 
 @Component({
   selector: 'app-competition-insert-update',
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, FileUploadComponent, DatePickerComponent, SearchUserByRoleComponenet, NgbNavModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, FileUploadComponent, DatePickerComponent, SearchUserByRoleComponenet, NgbNavModule, RegisterParamsCompetitionComponent],
   templateUrl: './competition-insert-update.html',
   styleUrl: './competition-insert-update.scss'
 })
@@ -118,7 +119,7 @@ export class CompetitionInsertUpdate implements OnInit {
   }
 
   jsonValidator(control: any) {
-    if (!control.value || control.value.trim() === '') {
+    if (!control.value) {
       return null; // No error for empty values
     }
 
@@ -286,5 +287,9 @@ export class CompetitionInsertUpdate implements OnInit {
         coachId: input.id,
       })
     }
+  }
+
+  onSelectionChange($event) {
+    console.log($event)
   }
 }

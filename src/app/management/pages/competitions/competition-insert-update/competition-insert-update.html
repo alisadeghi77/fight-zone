@@ -81,6 +81,8 @@
                             </button>
                         </div>
                     </form>
+                    <app-register-params-competition [paramData]="this.jsonForm.get('jsonParams')?.value"
+                        (selectionChange)="onSelectionChange($event)" />
                 </div>
             </div>
         </ng-template>
