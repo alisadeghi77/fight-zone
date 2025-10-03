@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormControl } 
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, switchMap } from 'rxjs';
 import { CompetitionHttpService } from 'src/app/shared/http-services/competition-http-service';
-import { CompetitionDto } from 'src/app/shared/models/competition.models';
+import { CompetitionDto, CompetitionStatus } from 'src/app/shared/models/competition.models';
 import { BaseResponseModel } from "src/app/shared/models/base-response.model";
 import { FileUploadComponent } from 'src/app/theme/shared/components/file-upload/file-upload.component';
 import { DatePickerComponent } from 'src/app/theme/shared/components/date-picker/date-picker.component';
@@ -16,6 +16,8 @@ import { UserHttpService } from 'src/app/shared/http-services/user-http-service'
 import { MinimalUserDto } from 'src/app/shared/models/user.models';
 import { SearchUserByRoleComponenet } from 'src/app/management/shared/search-user-by-role-componenet/search-user-by-role-componenet';
 import { RegisterParamsCompetitionComponent } from 'src/app/management/shared/register-params-competition/register-params-competition';
+import { BracketHttpService } from 'src/app/shared/http-services/bracket-http-service';
+import { BracketKeyDto } from 'src/app/shared/models/bracket.models';
 
 @Component({
   selector: 'app-competition-insert-update',
@@ -28,10 +30,17 @@ export class CompetitionInsertUpdate implements OnInit {
   form!: FormGroup;
   jsonForm!: FormGroup;
   participantForm!: FormGroup;
+  bracketForm!: FormGroup;
   active = 1;
   isEdit = false;
   message = '';
   competitionId?: string;
+  editableCompetitoin: CompetitionDto;
+
+  // Bracket related properties
+  bracketKeys: BracketKeyDto[] = [];
+  parsedBracketKeys: any[] = [];
+  selectedBracketInfo: BracketKeyDto | null = null;
 
 
   constructor(
@@ -39,6 +48,7 @@ export class CompetitionInsertUpdate implements OnInit {
     private participantsHttpService: ParticipantsHttpService,
     private competitionService: CompetitionHttpService,
     private UserService: UserHttpService,
+    private bracketHttpService: BracketHttpService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
@@ -70,36 +80,20 @@ export class CompetitionInsertUpdate implements OnInit {
       params: [[]],
     });
 
+    this.bracketForm = this.fb.group({
+      selectedKey: ['']
+    });
+
 
     this.route.paramMap
-      .pipe(
-        switchMap(params => {
-          const id = params.get('id');
-          if (id) {
-            this.isEdit = true;
-            this.competitionId = id;
-            return this.competitionService.getCompetitionById(id);
-          }
-          return [];
-        })
-      )
-      .subscribe({
-        next: (response: BaseResponseModel<CompetitionDto>) => {
-          const competition = response.data;
-          if (response) {
-            this.form.patchValue({
-              title: competition.title,
-              address: competition.address,
-              date: competition.date,
-              bannerImageId: competition.bannerImageId,
-              licenseImageId: competition.licenseImageId,
-            });
-            this.jsonForm.patchValue({
-              jsonParams: competition.registerParams
-            });
-          }
-        },
-        error: (response) => (this.message = response.error.errorMessages[0].message)
+      .subscribe((params) => {
+        const id = params.get('id');
+        if (id) {
+          this.isEdit = true;
+          this.competitionId = id;
+          this.loadBracketKeys();
+          return this.reloadCompetitionData()
+        }
       });
 
     this.loadParticipants();
@@ -148,10 +142,10 @@ export class CompetitionInsertUpdate implements OnInit {
       return;
     }
 
-    this.competitionService.updateCompetitionParams(this.competitionId, jsonParams)
+    this.competitionService.updateCompetitionParams(this.competitionId, JSON.parse(jsonParams))
       .subscribe({
         next: () => {
-          this.message = 'Competition parameters updated successfully ✅';
+          location.reload()
         },
         error: (error) => {
           this.message = 'Error updating competition parameters ❌';
@@ -189,6 +183,14 @@ export class CompetitionInsertUpdate implements OnInit {
   participantsFilteredData: ParticipantDto[] = [];
   participantsData: ParticipantDto[] = [];
   registerStatus = RegisterStatus;
+
+  // Persian status mappings
+  competitionStatusMap = {
+    [CompetitionStatus.PendToAdminApprove]: 'در انتظار تایید ادمین',
+    [CompetitionStatus.PendToStart]: 'در انتظار شروع، درحال ثبت نام',
+    [CompetitionStatus.OnProgress]: 'در حال برگزاری',
+    [CompetitionStatus.End]: 'پایان یافته'
+  };
   registerParticipant(): void {
     this.participantForm.patchValue({ competitionId: +this.competitionId });
 
@@ -290,6 +292,191 @@ export class CompetitionInsertUpdate implements OnInit {
   }
 
   onSelectionChange($event) {
-    console.log($event)
+    this.participantForm.patchValue({
+      params: $event
+    })
+  }
+
+  startRegistration(): void {
+    if (!this.competitionId) {
+      this.message = 'Competition ID not found';
+      return;
+    }
+
+    this.competitionService.startRegistration(this.competitionId)
+      .subscribe({
+        next: () => {
+          this.reloadCompetitionData();
+        },
+        error: (error) => {
+          this.message = 'Error starting registration ❌';
+          console.error('Error:', error);
+        }
+      });
+  }
+
+  changeVisibility(): void {
+    if (!this.competitionId) {
+      this.message = 'Competition ID not found';
+      return;
+    }
+
+    this.competitionService.changeVisibility(this.competitionId)
+      .subscribe({
+        next: () => {
+          this.reloadCompetitionData();
+        },
+        error: (error) => {
+          this.message = 'Error changing visibility ❌';
+          console.error('Error:', error);
+        }
+      });
+  }
+
+  changeRegistrationStatus(): void {
+    if (!this.competitionId) {
+      this.message = 'Competition ID not found';
+      return;
+    }
+
+    this.competitionService.changeRegistrationStatus(this.competitionId)
+      .subscribe({
+        next: () => {
+          this.reloadCompetitionData();
+        },
+        error: (error) => {
+          this.message = 'Error changing registration status ❌';
+          console.error('Error:', error);
+        }
+      });
+  }
+
+  approveParticipant(participantId: number): void {
+    this.participantsHttpService.approveParticipant(participantId)
+      .subscribe({
+        next: (response) => {
+          this.loadParticipants(); // Refresh the participants list
+        },
+        error: (error) => {
+          this.message = error.error?.errorMessages?.[0]?.message || 'خطا در تایید شرکت کننده ❌';
+          console.error('Error approving participant:', error);
+        }
+      });
+  }
+
+  rejectParticipant(participantId: number): void {
+    this.participantsHttpService.rejectParticipant(participantId)
+      .subscribe({
+        next: (response) => {
+          this.loadParticipants(); // Refresh the participants list
+        },
+        error: (error) => {
+          this.message = error.error?.errorMessages?.[0]?.message || 'خطا در رد شرکت کننده ❌';
+          console.error('Error rejecting participant:', error);
+        }
+      });
+  }
+
+  private reloadCompetitionData(): void {
+    if (!this.competitionId) return;
+
+    this.competitionService.getCompetitionById(this.competitionId)
+      .subscribe({
+        next: (response: BaseResponseModel<CompetitionDto>) => {
+          const competition = response.data;
+          if (response) {
+            this.editableCompetitoin = competition;
+
+            this.form.patchValue({
+              title: competition.title,
+              address: competition.address,
+              date: competition.date,
+              bannerImageId: competition.bannerImageId,
+              licenseImageId: competition.licenseImageId,
+            });
+
+            this.jsonForm.patchValue({
+              jsonParams: JSON.stringify(competition.registerParams)
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Error reloading competition data:', error);
+        }
+      });
+  }
+
+  // Bracket related methods
+  loadBracketKeys(): void {
+    if (!this.competitionId) return;
+
+    this.bracketHttpService.getAvailableKeys(this.competitionId)
+      .subscribe({
+        next: (response) => {
+          this.bracketKeys = response.data;
+          this.parseBracketKeys();
+        },
+        error: (error) => {
+          this.message = 'خطا در بارگذاری کلیدهای جدول ❌';
+          console.error('Error loading bracket keys:', error);
+        }
+      });
+  }
+
+  parseBracketKeys(): void {
+    this.parsedBracketKeys = this.bracketKeys.map(bracket => {
+      let title = "";
+      const parts = bracket.key.split('_');
+
+      parts.forEach(item => {
+        const keyValue = item.split('.');
+        title = `${title} ${keyValue[1]}`
+      })
+
+
+      return {
+        ...bracket,
+        title
+      };
+    });
+  }
+
+
+  onBracketKeyChange(event: any): void {
+    const selectedKey = event.target.value;
+    this.selectedBracketInfo = this.bracketKeys.find(b => b.key === selectedKey) || null;
+  }
+
+  generateBracketForKey(): void {
+    const selectedKey = this.bracketForm.get('selectedKey')?.value;
+    if (!selectedKey || !this.competitionId) return;
+
+    this.bracketHttpService.generateBracketForKey(this.competitionId, selectedKey)
+      .subscribe({
+        next: (response) => {
+          this.message = 'جدول با موفقیت ایجاد شد ✅';
+          this.loadBracketKeys(); // Refresh the data
+        },
+        error: (error) => {
+          this.message = 'خطا در ایجاد جدول ❌';
+          console.error('Error generating bracket:', error);
+        }
+      });
+  }
+
+  generateAllBrackets(): void {
+    if (!this.competitionId) return;
+
+    this.bracketHttpService.generateAllBrackets(this.competitionId)
+      .subscribe({
+        next: (response) => {
+          this.message = 'جداول کلی با موفقیت ایجاد شدند ✅';
+          this.loadBracketKeys(); // Refresh the data
+        },
+        error: (error) => {
+          this.message = 'خطا در ایجاد جداول کلی ❌';
+          console.error('Error generating all brackets:', error);
+        }
+      });
   }
 }

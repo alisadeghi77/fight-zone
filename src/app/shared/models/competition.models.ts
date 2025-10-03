@@ -1,11 +1,21 @@
+
+export enum CompetitionStatus {
+  PendToAdminApprove,
+  PendToStart,
+  OnProgress,
+  End
+}
 export interface CompetitionDto {
-    id: string;
-    title: string;
-    bannerImageId: number;
-    licenseImageId: number;
-    registerParams: CompetitionParam;
-    date: string;
-    address: string;
+  id: string;
+  title: string;
+  bannerImageId: number;
+  licenseImageId: number;
+  registerParams: CompetitionParam;
+  date: string;
+  address: string;
+  status: CompetitionStatus,
+  isVisible: boolean,
+  canRegister: boolean,
 }
 
 export interface CompetitionParam {
@@ -22,18 +32,18 @@ export interface CompetitionParamValue {
 
 
 export interface CreateCompetitionRequestDto {
-    title: string;
-    licenseImageId: number;
-    bannerImageId: number;
-    date: string;
-    address: string;
+  title: string;
+  licenseImageId: number;
+  bannerImageId: number;
+  date: string;
+  address: string;
 }
 
 export interface UpdateCompetitionRequestDto {
-    id: string;
-    title: string;
-    licenseImageId: number;
-    bannerImageId: number;
-    date: string;
-    address: string;
+  id: string;
+  title: string;
+  licenseImageId: number;
+  bannerImageId: number;
+  date: string;
+  address: string;
 }

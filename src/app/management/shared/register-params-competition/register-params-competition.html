@@ -1,14 +1,13 @@
 <form [formGroup]="form" class="row g-3">
   <div *ngFor="let node of currentNodes" class="col-md-4">
     <label class="form-label">{{ node.param.title }}</label>
-    <select
-      class="form-select"
-      [formControlName]="node.param.key"
-      (change)="onSelectChange(node.param, $event)">
-      <option value="" disabled selected>-- Select {{ node.param.title }} --</option>
-      <option *ngFor="let v of node.param.values" [value]="v.key">
+    <select class="form-select" [formControlName]="node.param.key" (change)="onSelectChange(node.param, $event)">
+      @for (v of node.param.values; track v; let i = $index) {
+      <!-- <option value="" disabled selected>{{ node.param.title }}</option> -->
+      <option [selected]="i === 0" [value]="v.key">
         {{ v.title }}
       </option>
+      }
     </select>
   </div>
 </form>

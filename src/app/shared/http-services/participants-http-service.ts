@@ -20,4 +20,12 @@ export class ParticipantsHttpService {
   createParticipant(participantData: CreateParticipantRequestByAdminDto): Observable<BaseResponseModel<any>> {
     return this.http.post<BaseResponseModel<any>>(`${this.baseUrl}/by-admin`, participantData);
   }
+
+  approveParticipant(participantId: number): Observable<BaseResponseModel<any>> {
+    return this.http.patch  <BaseResponseModel<any>>(`${this.baseUrl}/approve/${participantId}`, {});
+  }
+
+  rejectParticipant(participantId: number): Observable<BaseResponseModel<any>> {
+    return this.http.patch<BaseResponseModel<any>>(`${this.baseUrl}/reject/${participantId}`, {});
+  }
 }

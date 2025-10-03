@@ -25,12 +25,12 @@ interface CurrentNode {
   styleUrl: './register-params-competition.scss'
 })
 export class RegisterParamsCompetitionComponent implements OnChanges {
-   private _paramData!: CompetitionParam;
+  private _paramData!: CompetitionParam;
 
   @Input()
-  set paramData(value: CompetitionParam) {
+  set paramData(value: CompetitionParam | string) {
     if (value) {
-      this._paramData = value;
+      this._paramData = typeof (value) === 'string' ? JSON.parse(value) : value;
       this.buildForm();
     }
   }
@@ -44,7 +44,7 @@ export class RegisterParamsCompetitionComponent implements OnChanges {
   currentNodes: CurrentNode[] = [];
   private formValueSub?: Subscription;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['paramData'] && this.paramData) {

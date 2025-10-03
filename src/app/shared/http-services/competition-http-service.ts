@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CompetitionDto, CreateCompetitionRequestDto, UpdateCompetitionRequestDto } from '../models/competition.models';
+import { CompetitionDto, CompetitionParam, CreateCompetitionRequestDto, UpdateCompetitionRequestDto } from '../models/competition.models';
 import { BaseResponseModel } from "../models/base-response.model";
 import { environment } from 'src/environments/environment';
 
@@ -29,11 +29,23 @@ export class CompetitionHttpService {
     return this.http.put<BaseResponseModel<CompetitionDto>>(`${this.baseUrl}`, request);
   }
 
-  updateCompetitionParams(id: string, request: string): Observable<CompetitionDto> {
-    return this.http.put<CompetitionDto>(`${this.baseUrl}/${id}`, request);
+  updateCompetitionParams(id: string, request: CompetitionParam): Observable<CompetitionDto> {
+    return this.http.put<CompetitionDto>(`${this.baseUrl}/params/${id}`, request);
   }
 
   deleteCompetition(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  startRegistration(id: string): Observable<BaseResponseModel<any>> {
+    return this.http.patch<BaseResponseModel<any>>(`${this.baseUrl}/start-registration/${id}`, {});
+  }
+
+  changeVisibility(id: string): Observable<BaseResponseModel<any>> {
+    return this.http.patch<BaseResponseModel<any>>(`${this.baseUrl}/change-visibility/${id}`, {});
+  }
+
+  changeRegistrationStatus(id: string): Observable<BaseResponseModel<any>> {
+    return this.http.patch<BaseResponseModel<any>>(`${this.baseUrl}/change-registration-status/${id}`, {});
   }
 }

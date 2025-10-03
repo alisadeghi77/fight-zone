@@ -49,6 +49,52 @@
                     {{ message }}
                 </div>
             </div>
+
+            <!-- Competition Actions Card -->
+            <div class="card shadow-sm p-3 mt-3" *ngIf="isEdit">
+                <h5 class="card-title mb-3">عملیات مسابقه</h5>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mb-2">
+                            <strong>وضعیت مسابقه:</strong>
+                            <span class="badge bg-primary">{{competitionStatusMap[editableCompetitoin?.status]}}</span>
+                        </div>
+                        <div class="mb-2">
+                            <strong>قابل نمایش:</strong>
+                            <span class="badge" [class.bg-success]="editableCompetitoin?.isVisible"
+                                [class.bg-danger]="!editableCompetitoin?.isVisible">
+                                {{editableCompetitoin?.isVisible ? 'بله' : 'خیر'}}
+                            </span>
+                        </div>
+                        <div class="mb-2">
+                            <strong>قابل ثبت نام:</strong>
+                            <span class="badge" [class.bg-success]="editableCompetitoin?.canRegister"
+                                [class.bg-danger]="!editableCompetitoin?.canRegister">
+                                {{editableCompetitoin?.canRegister ? 'بله' : 'خیر'}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <button [disabled]="editableCompetitoin?.status != 1" type="button"
+                            class="btn btn-success w-100" (click)="startRegistration()">
+                            <i class="ti ti-play me-1"></i>
+                            شروع ثبت نام
+                        </button>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <button type="button" class="btn btn-warning w-100" (click)="changeVisibility()">
+                            <i class="ti ti-eye me-1"></i>
+                            تغییر وضعیت نمایش
+                        </button>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <button type="button" class="btn btn-info w-100" (click)="changeRegistrationStatus()">
+                            <i class="ti ti-edit me-1"></i>
+                            تغییر وضعیت ثبت نام
+                        </button>
+                    </div>
+                </div>
+            </div>
         </ng-template>
     </li>
     <li [ngbNavItem]="2" [disabled]="!isEdit">
@@ -81,8 +127,6 @@
                             </button>
                         </div>
                     </form>
-                    <app-register-params-competition [paramData]="this.jsonForm.get('jsonParams')?.value"
-                        (selectionChange)="onSelectionChange($event)" />
                 </div>
             </div>
         </ng-template>
@@ -98,13 +142,13 @@
                             <app-search-user-by-role-componenet (valueChange)="onParticipantChanged($event)"
                                 [role]="'PARTICIPANT'" />
                         </div>
-                        <div class="mb-3 col-2">
+                        <div class="mb-3 col-3">
                             <label class="form-label">نام </label>
                             <input type="text" id="firstName" formControlName="firstName" class="form-control"
                                 [class.is-invalid]="participantForm.get('firstName')?.invalid && participantForm.get('firstName')?.touched">
                         </div>
 
-                        <div class="mb-3 col-2">
+                        <div class="mb-3 col-3">
                             <label class="form-label">نام خانوادگی </label>
                             <input type="text" id="lastName" formControlName="lastName" class="form-control"
                                 [class.is-invalid]="participantForm.get('lastName')?.invalid && participantForm.get('lastName')?.touched">
@@ -115,7 +159,10 @@
                             <app-search-user-by-role-componenet (valueChange)="onCoachChanged($event)"
                                 [role]="'COACH'" />
                         </div>
-
+                        <div class="mb-3 col-10">
+                            <app-register-params-competition [paramData]="this.jsonForm.get('jsonParams')?.value"
+                                (selectionChange)="onSelectionChange($event)" />
+                        </div>
 
                         <div class="mb-3 col-2 d-flex align-items-start justify-content-start">
                             <button type="submit" class="btn btn-success" [disabled]="participantForm.invalid">
@@ -174,13 +221,26 @@
                                     </td>
 
                                     <td>
-                                        {{ registerStatus[participant.status]}}
+                                        <span class="badge p-1" [class.bg-warning]="participant.status === 0"
+                                            [class.bg-success]="participant.status === 1"
+                                            [class.bg-danger]="participant.status === 2">
+                                            {{ registerStatus[participant.status]}}
+                                        </span>
                                     </td>
 
                                     <td>
-                                        <a class="btn btn-sm btn-outline-primary">
-                                            <i class="ti ti-edit"></i>
-                                        </a>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-outline-success btn-sm"
+                                                (click)="approveParticipant(participant.id)"
+                                                [disabled]="participant.status === 1" title="تایید شرکت کننده">
+                                                <i class="ti ti-check"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger btn-sm"
+                                                (click)="rejectParticipant(participant.id)"
+                                                [disabled]="participant.status === 2" title="رد شرکت کننده">
+                                                <i class="ti ti-x"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                                 } @empty {
@@ -191,6 +251,53 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+        </ng-template>
+    </li>
+
+    <li [ngbNavItem]="4" [disabled]="!isEdit">
+        <button ngbNavLink>جداول</button>
+        <ng-template ngbNavContent>
+            <div class="card shadow-sm p-3" *ngIf="isEdit">
+                <h5 class="card-title mb-3">مدیریت جداول مسابقه</h5>
+                <div class="card-body">
+                    <form [formGroup]="bracketForm">
+                        <div class="row align-items-end">
+                            <div class="col-4">
+                                <label class="form-label">انتخاب رده وزنی</label>
+                                <select class="form-select" formControlName="selectedKey"
+                                    (change)="onBracketKeyChange($event)">
+                                    <option value="">انتخاب کنید...</option>
+                                    <option *ngFor="let bracket of parsedBracketKeys" [value]="bracket.key">
+                                        {{ bracket.title }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label">وضیعت جدول بندی</label>
+                                <div>
+                                    <span class="badge" [class.bg-success]="selectedBracketInfo?.hasAnyBrackets"
+                                        [class.bg-warning]="!selectedBracketInfo?.hasAnyBrackets">
+                                        {{ selectedBracketInfo?.hasAnyBrackets ? 'دارد' : 'ندارد' }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <button type="button" class="btn btn-primary w-100" (click)="generateBracketForKey()"
+                                    [disabled]="!bracketForm.get('selectedKey')?.value">
+                                    <i class="ti ti-plus me-1"></i>
+                                    ایجاد جدول
+                                </button>
+                            </div>
+                            <div class="col-3">
+                                <button type="button" class="btn btn-success w-100" (click)="generateAllBrackets()">
+                                    <i class="ti ti-layout-grid me-1"></i>
+                                    جدول بندی کلی
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </ng-template>
