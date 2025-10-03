@@ -18,10 +18,13 @@ import { SearchUserByRoleComponenet } from 'src/app/management/shared/search-use
 import { RegisterParamsCompetitionComponent } from 'src/app/management/shared/register-params-competition/register-params-competition';
 import { BracketHttpService } from 'src/app/shared/http-services/bracket-http-service';
 import { BracketKeyDto } from 'src/app/shared/models/bracket.models';
+import { MatchHttpService } from 'src/app/shared/http-services/match-http-service';
+import { MatchDto } from 'src/app/shared/models/match.models';
+import { BracketViewComponent } from 'src/app/theme/shared/components/bracket-view/bracket-view.component';
 
 @Component({
   selector: 'app-competition-insert-update',
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, FileUploadComponent, DatePickerComponent, SearchUserByRoleComponenet, NgbNavModule, RegisterParamsCompetitionComponent],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, FileUploadComponent, DatePickerComponent, SearchUserByRoleComponenet, NgbNavModule, RegisterParamsCompetitionComponent, BracketViewComponent],
   templateUrl: './competition-insert-update.html',
   styleUrl: './competition-insert-update.scss'
 })
@@ -49,6 +52,7 @@ export class CompetitionInsertUpdate implements OnInit {
     private competitionService: CompetitionHttpService,
     private UserService: UserHttpService,
     private bracketHttpService: BracketHttpService,
+    private matchHttpService: MatchHttpService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
@@ -442,9 +446,33 @@ export class CompetitionInsertUpdate implements OnInit {
   }
 
 
+  matches: MatchDto[] = [];
+  loadingMatches = false;
   onBracketKeyChange(event: any): void {
     const selectedKey = event.target.value;
     this.selectedBracketInfo = this.bracketKeys.find(b => b.key === selectedKey) || null;
+
+    // Load matches if the selected bracket has any brackets
+    this.matches = [];
+    if (this.selectedBracketInfo?.hasAnyBrackets) {
+      this.loadMatchesForKey(selectedKey);
+    }
+  }
+
+  loadMatchesForKey(key: string): void {
+    this.loadingMatches = true;
+    this.matchHttpService.getMatchesByKey(key)
+      .subscribe({
+        next: (response) => {
+          this.matches = response.data;
+          this.loadingMatches = false;
+        },
+        error: (error) => {
+          this.message = 'خطا در بارگذاری مسابقات ❌';
+          this.loadingMatches = false;
+          console.error('Error loading matches:', error);
+        }
+      });
   }
 
   generateBracketForKey(): void {

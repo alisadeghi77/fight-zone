@@ -1,0 +1,70 @@
+<div class="bracket-container" *ngIf="matches.length > 0">
+  <div class="bracket-header">
+    <h4 class="bracket-title">جدول مسابقات</h4>
+    <p class="bracket-subtitle" *ngIf="keyId">کلید: {{ keyId }}</p>
+  </div>
+
+  <div class="bracket-content">
+    <div class="rounds-container">
+      <div class="round" *ngFor="let round of rounds; let i = index">
+        <div class="round-header">
+          <h5 class="round-title">{{ getRoundName(round) }}</h5>
+          <span class="round-count">{{ groupedMatches[round].length }} مسابقه</span>
+        </div>
+        
+        <div class="matches-container">
+          <div class="match" *ngFor="let match of groupedMatches[round]">
+            <div class="match-card">
+              <div class="match-header">
+                <span class="match-number">#{{ match.matchNumberPosition }}</span>
+              </div>
+              
+              <div class="match-participants">
+                <div class="participant first-participant" 
+                     [class.winner]="isWinner(match, true)"
+                     [class.bye]="match.isFirstParticipantBye">
+                  <div class="participant-name">
+                    {{ getParticipantDisplayName(match, true) }}
+                  </div>
+                  <div class="participant-coach" *ngIf="getCoachDisplayName(match, true)">
+                    {{ getCoachDisplayName(match, true) }}
+                  </div>
+                </div>
+                
+                <div class="vs-divider">
+                  <span class="vs-text">VS</span>
+                </div>
+                
+                <div class="participant second-participant"
+                     [class.winner]="isWinner(match, false)"
+                     [class.bye]="match.isSecondParticipantBye">
+                  <div class="participant-name">
+                    {{ getParticipantDisplayName(match, false) }}
+                  </div>
+                  <div class="participant-coach" *ngIf="getCoachDisplayName(match, false)">
+                    {{ getCoachDisplayName(match, false) }}
+                  </div>
+                </div>
+              </div>
+              
+              <div class="match-result" *ngIf="match.winnerParticipantId">
+                <div class="winner-info">
+                  <i class="fas fa-trophy winner-icon"></i>
+                  <span class="winner-text">{{ match.winnerParticipantFullName }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="no-matches" *ngIf="matches.length === 0">
+  <div class="no-matches-content">
+    <i class="fas fa-trophy no-matches-icon"></i>
+    <h5>هیچ مسابقه‌ای یافت نشد</h5>
+    <p>برای مشاهده مسابقات، ابتدا کلید جدول را انتخاب کنید</p>
+  </div>
+</div>
