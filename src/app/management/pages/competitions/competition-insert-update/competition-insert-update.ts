@@ -20,7 +20,7 @@ import { BracketHttpService } from 'src/app/shared/http-services/bracket-http-se
 import { BracketKeyDto } from 'src/app/shared/models/bracket.models';
 import { MatchHttpService } from 'src/app/shared/http-services/match-http-service';
 import { MatchDto } from 'src/app/shared/models/match.models';
-import { BracketViewComponent } from 'src/app/theme/shared/components/bracket-view/bracket-view.component';
+import { BracketViewComponent } from 'src/app/management/shared/bracket-view/bracket-view.component';
 
 @Component({
   selector: 'app-competition-insert-update',
