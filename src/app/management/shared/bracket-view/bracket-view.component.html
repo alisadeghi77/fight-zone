@@ -1,58 +1,44 @@
-<div class="bracket-container" *ngIf="matches.length > 0">
-  <div class="bracket-header">
-    <h4 class="bracket-title">جدول مسابقات</h4>
-    <p class="bracket-subtitle" *ngIf="keyId">کلید: {{ keyId }}</p>
+<div class="container-fluid p-3" *ngIf="matches.length > 0">
+  <div class="text-center mb-3 border-bottom pb-2">
+    <h4 class="text-dark mb-1">جدول مسابقات</h4>
   </div>
-
-  <div class="bracket-content">
-    <div class="rounds-container">
-      <div class="round" *ngFor="let round of rounds; let i = index">
-        <div class="round-header">
-          <h5 class="round-title">{{ getRoundName(round) }}</h5>
-          <span class="round-count">{{ groupedMatches[round].length }} مسابقه</span>
+  <div class="">
+    <div class="d-flex gap-3">
+      <div class="justify-content-between flex-shrink-0" *ngFor="let round of rounds; let i = index" style="min-width: 300px">
+        <div class="bg-primary text-white text-center rounded p-2 mb-2">
+          <h6 class="mb-0">{{ getRoundName(round) }}
+            
+          <small class="text-muted">({{ roundGroupedMatches[round].length }} مسابقه)</small>
+          </h6>
         </div>
-        
-        <div class="matches-container">
-          <div class="match" *ngFor="let match of groupedMatches[round]">
-            <div class="match-card">
-              <div class="match-header">
-                <span class="match-number">#{{ match.matchNumberPosition }}</span>
-              </div>
-              
-              <div class="match-participants">
-                <div class="participant first-participant" 
-                     [class.winner]="isWinner(match, true)"
-                     [class.bye]="match.isFirstParticipantBye">
-                  <div class="participant-name">
-                    {{ getParticipantDisplayName(match, true) }}
-                  </div>
-                  <div class="participant-coach" *ngIf="getCoachDisplayName(match, true)">
-                    {{ getCoachDisplayName(match, true) }}
-                  </div>
-                </div>
-                
-                <div class="vs-divider">
-                  <span class="vs-text">VS</span>
-                </div>
-                
-                <div class="participant second-participant"
-                     [class.winner]="isWinner(match, false)"
-                     [class.bye]="match.isSecondParticipantBye">
-                  <div class="participant-name">
-                    {{ getParticipantDisplayName(match, false) }}
-                  </div>
-                  <div class="participant-coach" *ngIf="getCoachDisplayName(match, false)">
-                    {{ getCoachDisplayName(match, false) }}
-                  </div>
+        <div class="d-flex justify-content-around h-100 flex-column gap-2 ">
+          <div class="mb-4 p-1 bg-white border  rounded match-container"
+            *ngFor="let match of roundGroupedMatches[round]">
+            <span class="badge bg-dark match-number">{{ match.matchNumberPosition }}</span>
+            <div class="d-flex flex-column gap-1">
+              <div class="p-2 border border-primary rounded"
+                [class.cursor-pointer]="!match.isFirstParticipantBye && match.firstParticipantId">
+                <div class="fw-bold">
+                  {{ getParticipantDisplayName(match, true) }}
+                  <small class="text-muted" *ngIf="getCoachDisplayName(match, true)">
+                    ({{ getCoachDisplayName(match,true) }})
+                  </small>
                 </div>
               </div>
-              
-              <div class="match-result" *ngIf="match.winnerParticipantId">
-                <div class="winner-info">
-                  <i class="fas fa-trophy winner-icon"></i>
-                  <span class="winner-text">{{ match.winnerParticipantFullName }}</span>
+              <div class="text-center">
+              </div>
+              <div class="p-2 border border-danger rounded"
+                [class.cursor-pointer]="!match.isSecondParticipantBye && match.secondParticipantId">
+                <div class="fw-bold">
+                  {{ getParticipantDisplayName(match, false) }}
+                  <small class="text-muted" *ngIf="getCoachDisplayName(match, false)">
+                    ({{ getCoachDisplayName(match,false) }})
+                  </small>
                 </div>
               </div>
+            </div>
+            <div class="text-center mt-2 text-success fw-bold" *ngIf="match.winnerParticipantId">
+              <small>برنده: {{ match.winnerParticipantFullName }}</small>
             </div>
           </div>
         </div>
@@ -61,10 +47,7 @@
   </div>
 </div>
 
-<div class="no-matches" *ngIf="matches.length === 0">
-  <div class="no-matches-content">
-    <i class="fas fa-trophy no-matches-icon"></i>
-    <h5>هیچ مسابقه‌ای یافت نشد</h5>
-    <p>برای مشاهده مسابقات، ابتدا کلید جدول را انتخاب کنید</p>
-  </div>
+<div class="text-center p-5 text-muted" *ngIf="matches.length === 0">
+  <h5 class="text-secondary">هیچ مسابقه‌ای یافت نشد</h5>
+  <small>برای مشاهده مسابقات، ابتدا کلید جدول را انتخاب کنید</small>
 </div>

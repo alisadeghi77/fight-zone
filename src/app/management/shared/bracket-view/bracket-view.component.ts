@@ -14,7 +14,7 @@ export class BracketViewComponent implements OnInit, OnChanges {
   @Input() competitionId?: string;
   @Input() keyId?: string;
 
-  groupedMatches: { [round: number]: MatchDto[] } = {};
+  roundGroupedMatches: { [round: number]: MatchDto[] } = {};
   rounds: number[] = [];
 
   ngOnInit(): void {
@@ -26,21 +26,23 @@ export class BracketViewComponent implements OnInit, OnChanges {
   }
 
   private groupMatchesByRound(): void {
-    this.groupedMatches = {};
+    this.roundGroupedMatches = {};
     this.matches.forEach(match => {
-      if (!this.groupedMatches[match.round]) {
-        this.groupedMatches[match.round] = [];
+      if (!this.roundGroupedMatches[match.round]) {
+        this.roundGroupedMatches[match.round] = [];
       }
-      this.groupedMatches[match.round].push(match);
+      this.roundGroupedMatches[match.round].push(match);
     });
 
+    console.log(this.roundGroupedMatches);
+
     // Sort matches within each round by match number position
-    Object.keys(this.groupedMatches).forEach(round => {
-      this.groupedMatches[+round].sort((a, b) => a.matchNumberPosition - b.matchNumberPosition);
+    Object.keys(this.roundGroupedMatches).forEach(round => {
+      this.roundGroupedMatches[+round].sort((a, b) => b.matchNumberPosition - a.matchNumberPosition);
     });
 
     // Sort rounds in descending order (finals first, then semifinals, etc.)
-    this.rounds = Object.keys(this.groupedMatches).map(r => +r).sort((a, b) => b - a);
+    this.rounds = Object.keys(this.roundGroupedMatches).map(r => +r).sort((a, b) => b - a);
   }
 
   getRoundName(round: number): string {
@@ -60,13 +62,18 @@ export class BracketViewComponent implements OnInit, OnChanges {
       if (match.isFirstParticipantBye) {
         return 'Bye';
       }
-      return match.firstParticipantFullName || 'نامشخص';
+      return match.firstParticipantFullName || '-';
     } else {
       if (match.isSecondParticipantBye) {
         return 'Bye';
       }
-      return match.secondParticipantFullName || 'نامشخص';
+      return match.secondParticipantFullName || '-';
     }
+  }
+
+  getParticipantDisplayNameById(matchNo: number, roundNumber: number, isFirst: boolean) {
+    const match = this.roundGroupedMatches[roundNumber].filter(f => f.matchNumberPosition == matchNo)[0]
+    console.log(matchNo, roundNumber, match);
   }
 
   getCoachDisplayName(match: MatchDto, isFirst: boolean): string {
@@ -80,14 +87,6 @@ export class BracketViewComponent implements OnInit, OnChanges {
         return '';
       }
       return match.secondParticipantCoachFullName || '';
-    }
-  }
-
-  isWinner(match: MatchDto, isFirst: boolean): boolean {
-    if (isFirst) {
-      return match.winnerParticipantId === match.firstParticipantId;
-    } else {
-      return match.winnerParticipantId === match.secondParticipantId;
     }
   }
 }
