@@ -24,7 +24,7 @@
   <div *ngIf="!loading && !error">
     <div class="row g-4">
       <div class="col-lg-6 col-xl-4" *ngFor="let competition of competitions">
-        <div class="card border shadow-sm">
+        <div class="card border shadow-sm competition-card" (click)="navigateToDetail(competition.id)">
           <img [src]="'https://www.wakoindia.org/wp-content/uploads/2023/12/WhatsApp-Image-2023-12-30-at-11.42.04-AM.jpeg'" 
                height="200px" 
                style="object-fit: cover;" 
@@ -50,9 +50,14 @@
               </div>
             </div>
 
-            <div class="d-flex w-100 justify-content-start align-items-center">
-              <button class="btn btn-outline-primary btn-sm" [disabled]="!competition.canRegister">
+            <div class="d-flex w-100 justify-content-between align-items-center gap-2">
+              <button class="btn btn-outline-primary btn-sm flex-grow-1" 
+                      [disabled]="!competition.canRegister"
+                      (click)="$event.stopPropagation()">
                 {{ !competition.canRegister ? 'ثبت نام بسته شده' : 'شرکت در مسابقه' }}
+              </button>
+              <button class="btn btn-primary btn-sm" (click)="$event.stopPropagation(); navigateToDetail(competition.id)">
+                مشاهده جزئیات
               </button>
             </div>
           </div>

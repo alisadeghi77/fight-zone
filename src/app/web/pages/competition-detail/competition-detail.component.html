@@ -1,0 +1,166 @@
+<div class="competition-detail-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">در حال بارگذاری...</span>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="alert alert-danger" role="alert">
+    {{ error }}
+  </div>
+
+  <!-- Competition Details -->
+  <div *ngIf="competition && !loading" class="competition-content">
+    
+    <!-- Banner Section -->
+    <section class="banner-section">
+      <div class="banner-image">
+        <img *ngIf="competition.bannerImageId" 
+             [src]="baseApiUrl + '/files/' + competition.bannerImageId" 
+             [alt]="competition.title"
+             class="img-fluid w-100"
+             onerror="this.src='https://www.wakoindia.org/wp-content/uploads/2023/12/WhatsApp-Image-2023-12-30-at-11.42.04-AM.jpeg'">
+        <div *ngIf="!competition.bannerImageId" class="default-banner"></div>
+        <div class="banner-overlay">
+          <h1 class="competition-title">{{ competition.title }}</h1>
+        </div>
+      </div>
+    </section>
+
+    <!-- Basic Information Section -->
+    <section class="info-section">
+      <div class="container">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h2 class="section-title">اطلاعات مسابقه</h2>
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div class="info-item">
+                  <span class="info-label">عنوان:</span>
+                  <span class="info-value">{{ competition.title }}</span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-item">
+                  <span class="info-label">تاریخ:</span>
+                  <span class="info-value">{{ formatDate(competition.date) }}</span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-item">
+                  <span class="info-label">وضعیت:</span>
+                  <span class="info-value">
+                    <span class="badge" [ngClass]="{
+                      'bg-warning': competition.status === 0,
+                      'bg-info': competition.status === 1,
+                      'bg-success': competition.status === 2,
+                      'bg-secondary': competition.status === 3
+                    }">
+                      {{ getCompetitionStatusText(competition.status) }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-item">
+                  <span class="info-label">امکان ثبت‌نام:</span>
+                  <span class="info-value">
+                    <span class="badge" [ngClass]="competition.canRegister ? 'bg-success' : 'bg-danger'">
+                      {{ competition.canRegister ? 'فعال' : 'غیرفعال' }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="info-item">
+                  <span class="info-label">آدرس:</span>
+                  <span class="info-value">{{ competition.address || 'اطلاعات آدرس موجود نیست' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Registration Parameters Section -->
+    <section class="params-section" *ngIf="competition.registerParams">
+      <div class="container">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h2 class="section-title">پارامترهای ثبت‌نام</h2>
+            <div class="params-content">
+              <div class="param-group">
+                <h3 class="param-title">{{ competition.registerParams.title }}</h3>
+                <div class="param-values" *ngIf="competition.registerParams.values">
+                  <div class="param-value" *ngFor="let value of competition.registerParams.values">
+                    <span class="param-badge">{{ value.title }}</span>
+                    <div class="sub-params" *ngIf="value.params && value.params.length > 0">
+                      <div class="sub-param" *ngFor="let subParam of value.params">
+                        <strong>{{ subParam.title }}:</strong>
+                        <span *ngFor="let subValue of subParam.values" class="sub-param-badge">
+                          {{ subValue.title }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Brackets Section -->
+    <section class="brackets-section" *ngIf="bracketKeys.length > 0">
+      <div class="container">
+        <h2 class="section-title text-center mb-4">جدول مسابقات</h2>
+        
+        <!-- Loading Brackets -->
+        <div *ngIf="loadingBrackets" class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">در حال بارگذاری جدول‌ها...</span>
+          </div>
+        </div>
+
+        <!-- Bracket for each key -->
+        <div *ngFor="let bracketKey of bracketKeys; let i = index" class="bracket-container mb-5">
+          <div class="card shadow-sm">
+            <div class="card-header">
+              <h3 class="bracket-key-title">{{ bracketKey.key }}</h3>
+            </div>
+            <div class="card-body">
+              <div *ngIf="matchesByKey[bracketKey.key] && matchesByKey[bracketKey.key].length > 0; else noBracket">
+                <app-bracket-view 
+                  [matches]="matchesByKey[bracketKey.key]"
+                  [competitionId]="competitionId"
+                  [keyId]="bracketKey.key"
+                  (needRefresh)="refreshBracket(bracketKey.key)">
+                </app-bracket-view>
+              </div>
+              <ng-template #noBracket>
+                <div class="no-bracket-message">
+                  <p>در حال بارگذاری جدول مسابقات...</p>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- No Brackets Message -->
+    <section class="no-brackets-section" *ngIf="!loadingBrackets && bracketKeys.length === 0">
+      <div class="container">
+        <div class="alert alert-info text-center" role="alert">
+          هنوز جدول مسابقاتی برای این رویداد تعریف نشده است.
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+

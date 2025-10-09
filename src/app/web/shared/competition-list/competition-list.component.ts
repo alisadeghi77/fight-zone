@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { CompetitionDto } from 'src/app/shared/models/competition.models';
 import { CompetitionHttpService } from 'src/app/shared/http-services/competition-http-service';
 
@@ -23,7 +24,10 @@ export class CompetitionListComponent implements OnInit {
   private allCompetitions: CompetitionDto[] = []; // Store all fetched competitions
   private scrollThreshold = 500; // Distance from bottom to trigger load (in pixels)
 
-  constructor(private competitionHttpService: CompetitionHttpService) {}
+  constructor(
+    private competitionHttpService: CompetitionHttpService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadCompetitions();
@@ -86,6 +90,10 @@ export class CompetitionListComponent implements OnInit {
     
     this.competitions = this.allCompetitions.slice(startIndex, endIndex);
     this.hasMore = endIndex < this.allCompetitions.length;
+  }
+
+  navigateToDetail(competitionId: string): void {
+    this.router.navigate(['/competition', competitionId]);
   }
 }
 
