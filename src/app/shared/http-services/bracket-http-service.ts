@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { BracketAvailableKeysResponse, BracketGenerationResponse } from 'src/app/shared/models/bracket.models';
+import { BaseResponseModel } from 'src/app/shared/models/base-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +23,13 @@ export class BracketHttpService {
 
   generateAllBrackets(competitionId: string): Observable<BracketGenerationResponse> {
     return this.http.post<BracketGenerationResponse>(`${this.baseUrl}/Bracket/${competitionId}`, {});
+  }
+
+  deleteBracketForKey(competitionId: number, bracketKey: string): Observable<BaseResponseModel<any>> {
+    return this.http.delete<BaseResponseModel<any>>(`${this.baseUrl}/Bracket/${competitionId}/${bracketKey}`);
+  }
+
+  deleteAllBrackets(competitionId: number): Observable<BaseResponseModel<any>> {
+    return this.http.delete<BaseResponseModel<any>>(`${this.baseUrl}/Bracket/${competitionId}`);
   }
 }

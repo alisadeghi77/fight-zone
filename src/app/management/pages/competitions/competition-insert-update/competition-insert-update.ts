@@ -9,7 +9,7 @@ import { CompetitionDto, CompetitionStatus } from 'src/app/shared/models/competi
 import { BaseResponseModel } from "src/app/shared/models/base-response.model";
 import { FileUploadComponent } from 'src/app/theme/shared/components/file-upload/file-upload.component';
 import { DatePickerComponent } from 'src/app/theme/shared/components/date-picker/date-picker.component';
-import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ParticipantsHttpService } from 'src/app/shared/http-services/participants-http-service';
 import { CreateParticipantRequestByAdminDto, ParticipantDto, RegisterStatus } from 'src/app/shared/models/participant.models';
 import { UserHttpService } from 'src/app/shared/http-services/user-http-service';
@@ -21,6 +21,7 @@ import { BracketKeyDto } from 'src/app/shared/models/bracket.models';
 import { MatchHttpService } from 'src/app/shared/http-services/match-http-service';
 import { MatchDto } from 'src/app/shared/models/match.models';
 import { BracketViewComponent } from 'src/app/management/shared/bracket-view/bracket-view.component';
+import { ConfirmationModalComponent } from 'src/app/theme/shared/components/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-competition-insert-update',
@@ -54,7 +55,8 @@ export class CompetitionInsertUpdate implements OnInit {
     private bracketHttpService: BracketHttpService,
     private matchHttpService: MatchHttpService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private modalService: NgbModal
   ) { }
 
   ngOnInit(): void {
@@ -479,31 +481,72 @@ export class CompetitionInsertUpdate implements OnInit {
     const selectedKey = this.bracketForm.get('selectedKey')?.value;
     if (!selectedKey || !this.competitionId) return;
 
-    this.bracketHttpService.generateBracketForKey(this.competitionId, selectedKey)
-      .subscribe({
-        next: (response) => {
-          this.message = 'جدول با موفقیت ایجاد شد ✅';
-          this.loadBracketKeys(); // Refresh the data
-        },
-        error: (error) => {
-          this.message = 'خطا در ایجاد جدول ❌';
-          console.error('Error generating bracket:', error);
+    const modalRef = this.modalService.open(ConfirmationModalComponent, {
+      centered: true,
+      keyboard: true
+    });
+
+
+    modalRef.result.then(
+      (result) => {
+        if (result) {
+          this.bracketHttpService.deleteBracketForKey(+this.competitionId!, selectedKey)
+            .subscribe({
+              next: () => {
+                this.bracketHttpService.generateBracketForKey(this.competitionId!, selectedKey)
+                  .subscribe({
+                    next: (response) => {
+                      this.message = 'جدول با موفقیت ایجاد شد ✅';
+                      this.loadBracketKeys();
+                    },
+                    error: (error) => {
+                      this.message = 'خطا در ایجاد جدول ❌';
+                      console.error('Error generating bracket:', error);
+                    }
+                  });
+              },
+              error: (error) => {
+                this.message = 'خطا در ایجاد جدول ❌';
+                console.error('Error generating bracket:', error);
+              }
+            });
         }
-      });
+      }
+    );
   }
 
   generateAllBrackets(): void {
     if (!this.competitionId) return;
 
-    this.bracketHttpService.generateAllBrackets(this.competitionId)
-      .subscribe({
-        next: (response) => {
-          this.message = 'جداول کلی با موفقیت ایجاد شدند ✅';
-          this.loadBracketKeys(); // Refresh the data
-        },
-        error: (error) => {
-          this.message = 'خطا در ایجاد جداول کلی ❌';
-          console.error('Error generating all brackets:', error);
+    const modalRef = this.modalService.open(ConfirmationModalComponent, {
+      centered: true,
+      keyboard: true
+    });
+
+    modalRef.result.then(
+      (result) => {
+        if (result) {
+          this.bracketHttpService.deleteAllBrackets(+this.competitionId!)
+            .subscribe({
+              next: () => {
+                this.bracketHttpService.generateAllBrackets(this.competitionId!)
+                  .subscribe({
+                    next: (response) => {
+                      this.message = 'جداول کلی با موفقیت ایجاد شدند ✅';
+                      this.loadBracketKeys(); // Refresh the data
+                    },
+                    error: (error) => {
+                      this.message = 'خطا در ایجاد جداول کلی ❌';
+                      console.error('Error generating all brackets:', error);
+                    }
+                  });
+              },
+              error: (error) => {
+                this.message = 'خطا در ایجاد جداول کلی ❌';
+                console.error('Error generating all brackets:', error);
+
+              }
+            });
         }
       });
   }
