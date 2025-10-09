@@ -9,14 +9,13 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ProjectThemConfig } from 'src/app/app-config';
 import { NavigationComponent } from '../navigation/navigation.component';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumbs/breadcrumbs.component';
 import { AuthService } from '../../../shared/services/auth.service';
 
 
 
 @Component({
   selector: 'app-management-layout',
-  imports: [CommonModule, NavigationComponent, NavBarComponent, RouterModule, BreadcrumbComponent],
+  imports: [CommonModule, NavigationComponent, NavBarComponent, RouterModule],
   templateUrl: './management-layout-component.html',
   styleUrl: './management-layout-component.scss'
 })
