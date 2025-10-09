@@ -201,6 +201,7 @@
                                     <th scope="col">تلفن مربی</th>
                                     <th scope="col">مشخصات</th>
                                     <th scope="col">وضعیت</th>
+                                    <th scope="col">حذف</th>
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
@@ -234,6 +235,13 @@
                                     </td>
 
                                     <td>
+                                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                            (click)="deleteParticipant(participant.id)" title="حذف شرکت کننده">
+                                            <i class="ti ti-trash"></i>
+                                        </button>
+                                    </td>
+
+                                    <td>
                                         <div class="btn-group" role="group">
                                             <button type="button" class="btn btn-outline-success btn-sm"
                                                 (click)="approveParticipant(participant.id)"
@@ -250,7 +258,7 @@
                                 </tr>
                                 } @empty {
                                 <tr>
-                                    <td colspan="7" style="text-align: center">رکوردی وجود ندارد</td>
+                                    <td colspan="9" style="text-align: center">رکوردی وجود ندارد</td>
                                 </tr>
                                 }
                             </tbody>

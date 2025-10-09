@@ -28,4 +28,8 @@ export class ParticipantsHttpService {
   rejectParticipant(participantId: number): Observable<BaseResponseModel<any>> {
     return this.http.patch<BaseResponseModel<any>>(`${this.baseUrl}/reject/${participantId}`, {});
   }
+
+  deleteParticipant(participantId: number): Observable<BaseResponseModel<any>> {
+    return this.http.delete<BaseResponseModel<any>>(`${this.baseUrl}/by-admin/${participantId}`);
+  }
 }

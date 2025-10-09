@@ -386,6 +386,30 @@ export class CompetitionInsertUpdate implements OnInit {
       });
   }
 
+  deleteParticipant(participantId: number): void {
+    const modalRef = this.modalService.open(ConfirmationModalComponent, {
+      centered: true,
+      keyboard: true
+    });
+
+    modalRef.result.then(
+      (result) => {
+        if (result) {
+          this.participantsHttpService.deleteParticipant(participantId)
+            .subscribe({
+              next: (response) => {
+                this.loadParticipants(); // Refresh the participants list
+              },
+              error: (error) => {
+                this.message = error.error?.errorMessages?.[0]?.message || 'خطا در حذف شرکت کننده ❌';
+                console.error('Error deleting participant:', error);
+              }
+            });
+        }
+      }
+    );
+  }
+
   private reloadCompetitionData(): void {
     if (!this.competitionId) return;
 
