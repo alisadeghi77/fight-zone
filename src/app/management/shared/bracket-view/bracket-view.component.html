@@ -17,7 +17,8 @@
             <span class="badge bg-dark match-number">{{ match.matchNumberPosition }}</span>
             <div class="d-flex flex-column gap-1">
               <div class="p-2 border border-primary rounded"
-                [class.cursor-pointer]="!match.isFirstParticipantBye && match.firstParticipantId">
+                [class.cursor-pointer]="!match.isFirstParticipantBye && match.firstParticipantId"
+                (click)="onParticipantClick(match, true)">
                 <div class="fw-bold">
                   {{ getParticipantDisplayName(match, true) }}
                   <small class="text-muted" *ngIf="getCoachDisplayName(match, true)">
@@ -28,7 +29,8 @@
               <div class="text-center">
               </div>
               <div class="p-2 border border-danger rounded"
-                [class.cursor-pointer]="!match.isSecondParticipantBye && match.secondParticipantId">
+                [class.cursor-pointer]="!match.isSecondParticipantBye && match.secondParticipantId"
+                (click)="onParticipantClick(match, false)">
                 <div class="fw-bold">
                   {{ getParticipantDisplayName(match, false) }}
                   <small class="text-muted" *ngIf="getCoachDisplayName(match, false)">
@@ -36,9 +38,6 @@
                   </small>
                 </div>
               </div>
-            </div>
-            <div class="text-center mt-2 text-success fw-bold" *ngIf="match.winnerParticipantId">
-              <small>برنده: {{ match.winnerParticipantFullName }}</small>
             </div>
           </div>
         </div>

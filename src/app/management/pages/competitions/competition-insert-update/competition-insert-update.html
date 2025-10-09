@@ -199,6 +199,7 @@
                                     <th scope="col">شماره تلفن</th>
                                     <th scope="col">نام مربی</th>
                                     <th scope="col">تلفن مربی</th>
+                                    <th scope="col">مشخصات</th>
                                     <th scope="col">وضعیت</th>
                                     <th scope="col"></th>
                                 </tr>
@@ -218,6 +219,10 @@
                                     </td>
                                     <td>
                                         {{participant.coachPhoneNumber}}
+                                    </td>
+                                    
+                                    <td>
+                                        {{participant.participantParamProperties}}
                                     </td>
 
                                     <td>
@@ -303,20 +308,11 @@
 
             <!-- Bracket View -->
             <div class="bracket-view-container" *ngIf="selectedBracketInfo?.hasAnyBrackets">
-                <div class="loading-indicator" *ngIf="loadingMatches">
-                    <div class="text-center">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">در حال بارگذاری...</span>
-                        </div>
-                        <p class="mt-2">در حال بارگذاری مسابقات...</p>
-                    </div>
-                </div>
-                
                 <app-bracket-view 
                     [matches]="matches"
                     [competitionId]="competitionId"
                     [keyId]="selectedBracketInfo?.key"
-                    *ngIf="!loadingMatches">
+                    (needRefresh)="onBracketNeedRefresh()" >
                 </app-bracket-view>
             </div>
         </ng-template>

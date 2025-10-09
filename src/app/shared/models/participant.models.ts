@@ -18,7 +18,8 @@ export interface ParticipantDto {
     coachFullName: string;
     coachPhoneNumber: string;
     status?: RegisterStatus;
-    participantParam?: ParticipantParam[];
+    registerParams?: ParticipantParam[];
+    participantParamProperties: string
 }
 
 

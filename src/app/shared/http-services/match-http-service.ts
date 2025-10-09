@@ -16,4 +16,11 @@ export class MatchHttpService {
   getMatchesByKey(key: string): Observable<BaseResponseModel<MatchDto[]>> {
     return this.http.get<BaseResponseModel<MatchDto[]>>(`${this.baseUrl}/Match/${key}`);
   }
+
+  setMatchWinner(matchId: string, participantId: number): Observable<BaseResponseModel<any>> {
+    return this.http.post<BaseResponseModel<any>>(`${this.baseUrl}/Match`, {
+      matchId,
+      participantId
+    });
+  }
 }

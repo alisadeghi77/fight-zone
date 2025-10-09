@@ -257,8 +257,11 @@ export class CompetitionInsertUpdate implements OnInit {
 
     this.participantsHttpService.getParticipants(this.competitionId)
       .subscribe(response => {
-        this.participantsData = response.data
-        this.participantsFilteredData = response.data
+        this.participantsData = response.data.map(item => ({
+          ...item,
+          participantParamProperties:item.registerParams.map(p => p.value).join(' ')
+        }))
+        this.participantsFilteredData = this.participantsData 
       });
 
   }
@@ -449,7 +452,6 @@ export class CompetitionInsertUpdate implements OnInit {
 
 
   matches: MatchDto[] = [];
-  loadingMatches = false;
   onBracketKeyChange(event: any): void {
     const selectedKey = event.target.value;
     this.selectedBracketInfo = this.bracketKeys.find(b => b.key === selectedKey) || null;
@@ -462,19 +464,23 @@ export class CompetitionInsertUpdate implements OnInit {
   }
 
   loadMatchesForKey(key: string): void {
-    this.loadingMatches = true;
     this.matchHttpService.getMatchesByKey(key)
       .subscribe({
         next: (response) => {
           this.matches = response.data;
-          this.loadingMatches = false;
         },
         error: (error) => {
           this.message = 'خطا در بارگذاری مسابقات ❌';
-          this.loadingMatches = false;
           console.error('Error loading matches:', error);
         }
       });
+  }
+
+  onBracketNeedRefresh(): void {
+    const selectedKey = this.bracketForm.get('selectedKey')?.value;
+    if (selectedKey) {
+      this.loadMatchesForKey(selectedKey);
+    }
   }
 
   generateBracketForKey(): void {

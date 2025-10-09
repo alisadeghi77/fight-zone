@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 import { MatchDto } from 'src/app/shared/models/match.models';
+import { MatchHttpService } from 'src/app/shared/http-services/match-http-service';
 
 @Component({
   selector: 'app-bracket-view',
@@ -13,9 +14,12 @@ export class BracketViewComponent implements OnInit, OnChanges {
   @Input() matches: MatchDto[] = [];
   @Input() competitionId?: string;
   @Input() keyId?: string;
+  @Output() needRefresh = new EventEmitter<void>();
 
   roundGroupedMatches: { [round: number]: MatchDto[] } = {};
   rounds: number[] = [];
+
+  constructor(private matchHttpService: MatchHttpService) { }
 
   ngOnInit(): void {
     this.groupMatchesByRound();
@@ -88,5 +92,24 @@ export class BracketViewComponent implements OnInit, OnChanges {
       }
       return match.secondParticipantCoachFullName || '';
     }
+  }
+
+  onParticipantClick(match: MatchDto, isFirst: boolean): void {
+    const isBye = isFirst ? match.isFirstParticipantBye : match.isSecondParticipantBye;
+    const participantId = isFirst ? match.firstParticipantId : match.secondParticipantId;
+
+    if (isBye || !participantId) {
+      return;
+    }
+
+    this.matchHttpService.setMatchWinner(match.id, participantId).subscribe({
+      next: (response) => {
+        this.needRefresh.emit();
+      },
+      error: (error) => {
+        console.error('Error setting winner:', error);
+        // Handle error (show toast notification, etc.)
+      }
+    });
   }
 }
