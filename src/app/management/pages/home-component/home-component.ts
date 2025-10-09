@@ -1,12 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { BajajChartComponent } from 'src/app/theme/shared/components/apexchart/bajaj-chart/bajaj-chart.component';
-import { BarChartComponent } from 'src/app/theme/shared/components/apexchart/bar-chart/bar-chart.component';
-import { ChartDataMonthComponent } from 'src/app/theme/shared/components/apexchart/chart-data-month/chart-data-month.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, BajajChartComponent, ChartDataMonthComponent, BarChartComponent],
+  imports: [CommonModule],
   selector: 'app-home-component',
   templateUrl: './home-component.html',
   styleUrl: './home-component.scss'
