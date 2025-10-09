@@ -74,12 +74,12 @@ export class CompetitionInsertUpdate implements OnInit {
     });
 
     this.participantForm = this.fb.group({
-      participantId: [''],
+      participantUserId: [''],
       phoneNumber: ['', Validators.maxLength(11)],
       firstName: [''],
       lastName: [''],
 
-      coachId: [''],
+      coachUserId: [''],
       coachPhoneNumber: ['', Validators.maxLength(11)],
 
       competitionId: [0],
@@ -219,11 +219,11 @@ export class CompetitionInsertUpdate implements OnInit {
         next: (response) => {
           this.message = 'Participant registered successfully ✅';
           this.participantForm.patchValue({
-            participantId: '',
+            participantUserId: '',
             phoneNumber: '',
             firstName: '',
             lastName: '',
-            coachId: '',
+            coachUserId: '',
             coachPhoneNumber: '',
             competitionId: 0,
             params: []
@@ -270,13 +270,13 @@ export class CompetitionInsertUpdate implements OnInit {
     if (typeof input === 'string') {
       this.participantForm.patchValue({
         phoneNumber: input,
-        participantId: null
+        participantUserId: null
       })
       this.participantForm.controls['firstName'].enable();
       this.participantForm.controls['lastName'].enable();
     } else {
       this.participantForm.patchValue({
-        participantId: input.id,
+        participantUserId: input.id,
         firstName: input.fullName.split(' ').at(0),
         lastName: input.fullName.split(' ')?.at(1)
       })
@@ -295,7 +295,7 @@ export class CompetitionInsertUpdate implements OnInit {
       })
     } else {
       this.participantForm.patchValue({
-        coachId: input.id,
+        coachUserId: input.id,
       })
     }
   }

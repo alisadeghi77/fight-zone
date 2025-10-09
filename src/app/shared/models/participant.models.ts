@@ -24,11 +24,11 @@ export interface ParticipantDto {
 
 
 export interface CreateParticipantRequestByAdminDto {
-    participantId:string,
+    participantUserId:string,
     phoneNumber:string,
     firstName:string,
     lastName:string,
-    coachId:string,
+    coachUserId:string,
     coachPhoneNumber:string,
     competitionId:number,
     params : ParticipantParam[]
