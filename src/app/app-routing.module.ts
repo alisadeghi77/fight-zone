@@ -25,33 +25,6 @@ const routes: Routes = [
         redirectTo: '/admin/default',
         pathMatch: 'full'
       },
-      {
-        path: 'default',
-        loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent)
-      },
-      {
-        path: 'typography',
-        loadComponent: () => import('./demo/elements/typography/typography.component').then((c) => c.TypographyComponent)
-      },
-      {
-        path: 'color',
-        loadComponent: () => import('./demo/elements/element-color/element-color.component').then((c) => c.ElementColorComponent)
-      },
-      {
-        path: 'sample-page',
-        loadComponent: () => import('./demo/other/sample-page/sample-page.component').then((c) => c.SamplePageComponent)
-      }
-    ]
-  },
-  {
-    path: 'guest',
-    component: GuestComponent,
-    children: [
-      
-      {
-        path: 'register',
-        loadComponent: () => import('./demo/pages/authentication/register/register.component').then((c) => c.RegisterComponent)
-      }
     ]
   }
 ];
