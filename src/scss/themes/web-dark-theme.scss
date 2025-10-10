@@ -1,0 +1,205 @@
+// =======================================
+//   Dark Theme for Web Section
+// =======================================
+
+// Dark theme variables
+$dark-body-bg: #1a1a1a;
+$dark-card-bg: #2d2d2d;
+$dark-text-color: #ffffff;
+$dark-text-muted: #b0b0b0;
+$dark-border-color: #404040;
+$dark-navbar-bg: #212529;
+$dark-footer-bg: #1a1a1a;
+
+// Apply dark theme to web layout
+.web-layout {
+  background-color: $dark-body-bg;
+  color: $dark-text-color;
+  min-height: 100vh;
+
+  // Navigation styles
+  .navbar {
+    background-color: $dark-navbar-bg !important;
+    border-bottom: 1px solid $dark-border-color;
+
+    .navbar-brand {
+      color: $dark-text-color;
+    }
+
+    .nav-link {
+      color: $dark-text-muted;
+
+      &:hover,
+      &.active {
+        color: $dark-text-color;
+      }
+    }
+
+    .btn {
+      &.btn-outline-dark {
+        border-color: $dark-border-color;
+        color: $dark-text-color;
+
+        &:hover {
+          background-color: $dark-border-color;
+          border-color: $dark-border-color;
+        }
+      }
+    }
+  }
+
+  // Footer styles
+  footer {
+    background-color: $dark-footer-bg !important;
+    border-top: 1px solid $dark-border-color;
+
+    .text-muted {
+      color: $dark-text-muted !important;
+    }
+  }
+
+  // Main content area
+  main {
+    background-color: $dark-body-bg;
+  }
+
+  // Cards
+  .card {
+    background-color: $dark-card-bg;
+    border: 1px solid $dark-border-color;
+    color: $dark-text-color;
+
+    .card-header {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid $dark-border-color;
+    }
+
+    .card-body {
+      color: $dark-text-color;
+    }
+  }
+
+  // Carousel
+  .carousel {
+    .carousel-indicators {
+      button {
+        background-color: $dark-border-color;
+
+        &.active {
+          background-color: $dark-text-color;
+        }
+      }
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+      .carousel-control-prev-icon,
+      .carousel-control-next-icon {
+        filter: invert(1);
+      }
+    }
+  }
+
+  // Buttons
+  .btn {
+    &.btn-primary {
+      background-color: $-primary-color;
+      border-color: $-primary-color;
+
+      &:hover {
+        background-color: darken($-primary-color, 10%);
+        border-color: darken($-primary-color, 10%);
+      }
+    }
+
+    &.btn-secondary {
+      background-color: $-secondary-color;
+      border-color: $-secondary-color;
+
+      &:hover {
+        background-color: darken($-secondary-color, 10%);
+        border-color: darken($-secondary-color, 10%);
+      }
+    }
+
+    &.btn-outline-primary {
+      color: $-primary-color;
+      border-color: $-primary-color;
+
+      &:hover {
+        background-color: $-primary-color;
+        border-color: $-primary-color;
+      }
+    }
+
+    &.btn-outline-secondary {
+      color: $-secondary-color;
+      border-color: $-secondary-color;
+
+      &:hover {
+        background-color: $-secondary-color;
+        border-color: $-secondary-color;
+      }
+    }
+  }
+
+  // Text colors
+  .text-muted {
+    color: $dark-text-muted !important;
+  }
+
+  .text-dark {
+    color: $dark-text-color !important;
+  }
+
+  // Borders
+  .border {
+    border-color: $dark-border-color !important;
+  }
+
+  .border-top {
+    border-top-color: $dark-border-color !important;
+  }
+
+  .border-bottom {
+    border-bottom-color: $dark-border-color !important;
+  }
+
+  // Background utilities
+  .bg-light {
+    background-color: $dark-card-bg !important;
+  }
+
+  .bg-white {
+    background-color: $dark-card-bg !important;
+  }
+
+  // Form elements
+  .form-control {
+    background-color: $dark-card-bg;
+    border-color: $dark-border-color;
+    color: $dark-text-color;
+
+    &:focus {
+      background-color: $dark-card-bg;
+      border-color: $-primary-color;
+      color: $dark-text-color;
+      box-shadow: 0 0 0 0.2rem rgba($-primary-color, 0.25);
+    }
+
+    &::placeholder {
+      color: $dark-text-muted;
+    }
+  }
+
+  .form-select {
+    background-color: $dark-card-bg;
+    border-color: $dark-border-color;
+    color: $dark-text-color;
+
+    &:focus {
+      border-color: $-primary-color;
+      box-shadow: 0 0 0 0.2rem rgba($-primary-color, 0.25);
+    }
+  }
+}

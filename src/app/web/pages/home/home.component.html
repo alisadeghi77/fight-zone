@@ -1,13 +1,14 @@
-<div class="container py-5" dir="rtl">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <div class="text-center mb-5">
-        <h1 class="display-4 fw-bold text-danger mb-4">
-            <img src="assets/images/logo.png" alt="لوگو" height="200" class="d-inline-block align-text-top">
-        </h1>
-      </div>
+<ngb-carousel [interval]="2000" [pauseOnHover]="true" [showNavigationArrows]="false" class="full-width-carousel">
+  <ng-template ngbSlide>
+    <div class="picsum-img-wrapper">
+      <img src="assets/images/s1.jpg" class="slide-img" alt="Random slide">
     </div>
-  </div>
-</div>
+  </ng-template>
+  <ng-template ngbSlide>
+    <div class="picsum-img-wrapper">
+      <img src="assets/images/s2.jpg" class="slide-img" alt="Random slide">
+    </div>
+  </ng-template>
+</ngb-carousel>
 
 <app-competition-list />

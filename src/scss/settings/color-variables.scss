@@ -13,6 +13,12 @@ $preset-colors: (
 );
 $dark-preset-colors: (
   preset-1: (
-    body: #111
+    body: #1a1a1a,
+    card: #2d2d2d,
+    text: #ffffff,
+    text-muted: #b0b0b0,
+    border: #404040,
+    primary: #8C1D1B,
+    secondary: #CC2925
   )
 );
