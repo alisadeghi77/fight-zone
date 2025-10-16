@@ -119,10 +119,6 @@
 <!-- Brackets Section -->
 <section class="brackets-section" *ngIf="bracketKeys.length > 0">
 <div class="container">
-  <div class="section-header">
-    <h2 class="section-title">جدول مسابقات</h2>
-  </div>
-  
   <!-- Loading Brackets -->
   <div *ngIf="loadingBrackets" class="loading-brackets">
     <div class="spinner-border text-primary" role="status">
@@ -130,20 +126,26 @@
     </div>
   </div>
 
-  <!-- Bracket for each key -->
-  <div *ngFor="let bracketKey of bracketKeys; let i = index" class="bracket-container">
+  <!-- Bracket key selector -->
+  <div class="mb-3 justify-content-end d-flex" *ngIf="bracketKeys.length > 0">
+    <h2 class="m-3 section-title">جدول مسابقات</h2>
+
+    <select class="form-select form-select-sm py-0 w-25" [ngModel]="selectedBracketKey" (ngModelChange)="selectedBracketKey = $event">
+      <option *ngFor="let k of bracketKeys" [ngValue]="k.key">{{ k.title }}</option>
+    </select>
+  </div>
+
+  <!-- Single bracket display -->
+  <div class="bracket-container" *ngIf="selectedBracketKey as currentKey">
     <div class="bracket-card">
-      <div class="bracket-header">
-        <h3 class="bracket-title">{{ bracketKey.key }}</h3>
-      </div>
       <div class="bracket-content">
-        <div *ngIf="matchesByKey[bracketKey.key] && matchesByKey[bracketKey.key].length > 0; else noBracket">
+        <div *ngIf="matchesByKey[currentKey] && matchesByKey[currentKey].length > 0; else noBracket">
           <app-bracket-view 
-            [matches]="matchesByKey[bracketKey.key]"
+            [matches]="matchesByKey[currentKey]"
             [competitionId]="competitionId"
-            [keyId]="bracketKey.key"
+            [keyId]="currentKey"
             [viewType]="'web-view'"
-            (needRefresh)="refreshBracket(bracketKey.key)">
+            (needRefresh)="refreshBracket(currentKey)">
           </app-bracket-view>
         </div>
         <ng-template #noBracket>

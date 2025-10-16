@@ -17,7 +17,7 @@ export class CompetitionListComponent implements OnInit {
   loadingMore = false;
   error: string | null = null;
   hasMore = true;
-  
+
   // Pagination state
   private currentPage = 0;
   private pageSize = 6; // Number of items per page
@@ -27,7 +27,7 @@ export class CompetitionListComponent implements OnInit {
   constructor(
     private competitionHttpService: CompetitionHttpService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCompetitions();
@@ -51,11 +51,11 @@ export class CompetitionListComponent implements OnInit {
   private loadCompetitions(): void {
     this.loading = true;
     this.error = null;
-    
+
     this.competitionHttpService.getCompetitions().subscribe({
       next: (response) => {
         if (response && response.data) {
-          this.allCompetitions = response.data;
+          this.allCompetitions = response.data.sort((a, b) => +b.canRegister - +a.canRegister );
           this.currentPage = 0;
           this.loadPage();
         }
@@ -75,7 +75,7 @@ export class CompetitionListComponent implements OnInit {
     }
 
     this.loadingMore = true;
-    
+
     // Simulate a small delay for better UX (optional)
     setTimeout(() => {
       this.currentPage++;
@@ -87,7 +87,7 @@ export class CompetitionListComponent implements OnInit {
   private loadPage(): void {
     const startIndex = 0;
     const endIndex = (this.currentPage + 1) * this.pageSize;
-    
+
     this.competitions = this.allCompetitions.slice(startIndex, endIndex);
     this.hasMore = endIndex < this.allCompetitions.length;
   }

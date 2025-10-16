@@ -2,24 +2,10 @@
   <ul class="list-unstyled">
     <li>
       <div class="dropdown pc-h-item header-user-profile" ngbDropdown>
-        <a
-          class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
-          data-bs-toggle="dropdown"
-          href="javascript:"
-          ngbDropdownToggle
-        >
-          <span>
-            <i class="ti ti-settings"></i>
-          </span>
+        <a [routerLink]="['/guest/login']" class="btn btn-sm btn-outline-danger d-flex align-items-center ">
+          <i class="ti ti-logout"></i>
+          <span class="mx-2">خروج</span>
         </a>
-        <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
-          <div class="dropdown-header">
-              <a [routerLink]="['/guest/login']" class="dropdown-item">
-                <i class="ti ti-logout"></i>
-                <span>خروج</span>
-              </a>
-          </div>
-        </div>
       </div>
     </li>
   </ul>

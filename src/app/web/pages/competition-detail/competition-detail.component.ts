@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CompetitionDto } from 'src/app/shared/models/competition.models';
 import { CompetitionHttpService } from 'src/app/shared/http-services/competition-http-service';
@@ -13,7 +14,7 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-competition-detail',
   standalone: true,
-  imports: [CommonModule, BracketViewComponent],
+  imports: [CommonModule, FormsModule, BracketViewComponent],
   templateUrl: './competition-detail.component.html',
   styleUrls: ['./competition-detail.component.scss']
 })
@@ -22,6 +23,7 @@ export class CompetitionDetailComponent implements OnInit {
   competition: CompetitionDto | null = null;
   bracketKeys: BracketKeyDto[] = [];
   matchesByKey: { [key: string]: MatchDto[] } = {};
+  selectedBracketKey: string | null = null;
   loading = false;
   loadingBrackets = false;
   error: string | null = null;
@@ -69,8 +71,15 @@ export class CompetitionDetailComponent implements OnInit {
     this.bracketHttpService.getAvailableKeys(this.competitionId).subscribe({
       next: (response) => {
         if (response && response.data) {
-          this.bracketKeys = response.data.filter(key => key.hasAnyBrackets);
-          // Load matches for each key
+          this.bracketKeys = response.data
+          .filter(key => key.hasAnyBrackets)
+          .map(item => ({
+            ...item,
+            title: item.key.split('_').map(word => word.split('.')[1]).join(' ')
+          }));
+          // Set default selected key
+          this.selectedBracketKey = this.bracketKeys.length > 0 ? this.bracketKeys[0].key : null;
+          // Load matches for each key (prefetch)
           this.bracketKeys.forEach(bracketKey => {
             this.loadMatchesForKey(bracketKey.key);
           });
