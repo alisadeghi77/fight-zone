@@ -1,19 +1,22 @@
 <div class="container-fluid p-3" [class.web-theme]="viewType === 'web-view'" *ngIf="matches.length > 0">
   <div class="mb-3" *ngIf="showRoundFilter">
-    <select class="form-select d-inline-block w-auto" [ngModel]="selectedRoundFilter" (ngModelChange)="onRoundFilterChange($event)">
+    <select class="form-select d-inline-block w-auto" [ngModel]="selectedRoundFilter"
+      (ngModelChange)="onRoundFilterChange($event)">
       <option [ngValue]="undefined">همه</option>
       <option *ngFor="let r of rounds" [ngValue]="r">{{ getRoundName(r) }}</option>
     </select>
+    <button *ngIf="showExportButton" class="btn btn-success btn-sm mx-3 " (click)="downloadJpg()">ذخیره</button>
   </div>
-  <div class="">
+  <div #bracketViewBlock class="">
     <div class="d-flex gap-3">
-      <div class="justify-content-between flex-shrink-0" *ngFor="let round of visibleRounds; let i = index" style="min-width: 300px">
+      <div class="justify-content-between flex-shrink-0" *ngFor="let round of visibleRounds; let i = index"
+        style="min-width: 300px">
         <div class="bg-primary text-white text-center rounded p-2 mb-2">
           <h6 class="mb-0">{{ getRoundName(round) }}
             <small class="text-muted">({{ roundGroupedMatches[round].length }} مسابقه)</small>
           </h6>
         </div>
-        <div class="d-flex justify-content-around h-100 flex-column gap-2 ">
+        <div  class="d-flex justify-content-around h-100 flex-column gap-2 ">
           <div class="mb-4 p-1 bg-white border  rounded match-container"
             *ngFor="let match of roundGroupedMatches[round]">
             <span class="badge bg-dark match-number">{{ match.matchNumberPosition }}</span>
@@ -26,7 +29,8 @@
                   <small class="text-muted" *ngIf="getCoachDisplayName(match, true)">
                     ({{ getCoachDisplayName(match,true) }})
                   </small>
-                  <span class="placement-badge" *ngIf="getPlacementLabel(match, true)" [ngClass]="getPlacementClass(match, true)">{{ getPlacementLabel(match, true) }}</span>
+                  <span class="placement-badge" *ngIf="getPlacementLabel(match, true)"
+                    [ngClass]="getPlacementClass(match, true)">{{ getPlacementLabel(match, true) }}</span>
                 </div>
               </div>
               <div class="text-center"></div>
@@ -38,7 +42,8 @@
                   <small class="text-muted" *ngIf="getCoachDisplayName(match, false)">
                     ({{ getCoachDisplayName(match,false) }})
                   </small>
-                  <span class="placement-badge" *ngIf="getPlacementLabel(match, false)" [ngClass]="getPlacementClass(match, false)">{{ getPlacementLabel(match, false) }}</span>
+                  <span class="placement-badge" *ngIf="getPlacementLabel(match, false)"
+                    [ngClass]="getPlacementClass(match, false)">{{ getPlacementLabel(match, false) }}</span>
                 </div>
               </div>
             </div>

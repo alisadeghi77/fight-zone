@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, ElementRef, ViewChild } from '@angular/core';
 import { MatchDto } from 'src/app/shared/models/match.models';
 import { MatchHttpService } from 'src/app/shared/http-services/match-http-service';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-bracket-view',
@@ -16,6 +17,7 @@ export class BracketViewComponent implements OnInit, OnChanges {
   @Input() matches: MatchDto[] = [];
   @Input() competitionId?: string;
   @Input() keyId?: string;
+  @Input() showExportButton: boolean = false;
   @Input() viewType: 'management-view' | 'web-view' = 'management-view';
   @Input() showRoundFilter: boolean = true;
   @Input() set selectedRoundFilter(value: number | undefined) {
@@ -195,4 +197,36 @@ export class BracketViewComponent implements OnInit, OnChanges {
       }
     });
   }
+
+  @ViewChild('bracketViewBlock', { static: false }) invoiceElement!: ElementRef;
+  async downloadJpg(): Promise<void> {
+    const element = this.invoiceElement.nativeElement as HTMLElement;
+
+    const originalOverflow = element.style.overflow;
+    const originalWidth = element.style.width;
+
+    element.style.overflow = 'visible';
+    element.style.width = element.scrollWidth + 'px';
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      scrollX: 0,
+      scrollY: 0,
+      x:-25,
+      y:-25,
+      width: element.scrollWidth + 50,
+      height: element.scrollHeight + 50,
+    });
+
+    const imageData = canvas.toDataURL('image/jpeg', 1.0);
+    const link = document.createElement('a');
+    link.href = imageData;
+    link.download = 'exported-content.jpg';
+    link.click();
+
+    // ✅ Restore original style
+    element.style.overflow = originalOverflow;
+    element.style.width = originalWidth;
+  }
+
 }

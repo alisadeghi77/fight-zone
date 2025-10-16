@@ -1,6 +1,7 @@
 // Angular import
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 // third party import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -11,4 +12,15 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
   templateUrl: './nav-right.component.html',
   styleUrls: ['./nav-right.component.scss']
 })
-export class NavRightComponent {}
+export class NavRightComponent {
+
+  constructor(private readonly authService: AuthService,
+    private router: Router,
+  ) {
+
+  }
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['auth/login']);
+  }
+}

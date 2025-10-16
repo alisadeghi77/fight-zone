@@ -2,7 +2,7 @@
   <ul class="list-unstyled">
     <li>
       <div class="dropdown pc-h-item header-user-profile" ngbDropdown>
-        <a [routerLink]="['/guest/login']" class="btn btn-sm btn-outline-danger d-flex align-items-center ">
+        <a (click)="logout()" class="btn btn-sm btn-outline-danger d-flex align-items-center ">
           <i class="ti ti-logout"></i>
           <span class="mx-2">خروج</span>
         </a>

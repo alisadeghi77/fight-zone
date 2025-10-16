@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, switchMap } from 'rxjs';
@@ -22,6 +22,8 @@ import { MatchHttpService } from 'src/app/shared/http-services/match-http-servic
 import { MatchDto } from 'src/app/shared/models/match.models';
 import { BracketViewComponent } from 'src/app/management/shared/bracket-view/bracket-view.component';
 import { ConfirmationModalComponent } from 'src/app/theme/shared/components/confirmation-modal/confirmation-modal.component';
+import html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-competition-insert-update',
@@ -30,6 +32,7 @@ import { ConfirmationModalComponent } from 'src/app/theme/shared/components/conf
   styleUrl: './competition-insert-update.scss'
 })
 export class CompetitionInsertUpdate implements OnInit {
+ 
   @Input() competition?: CompetitionDto; // if passed = edit mode
   form!: FormGroup;
   jsonForm!: FormGroup;
@@ -259,9 +262,9 @@ export class CompetitionInsertUpdate implements OnInit {
       .subscribe(response => {
         this.participantsData = response.data.map(item => ({
           ...item,
-          participantParamProperties:item.registerParams.map(p => p.value).join(' ')
+          participantParamProperties: item.registerParams.map(p => p.value).join(' ')
         }))
-        this.participantsFilteredData = this.participantsData 
+        this.participantsFilteredData = this.participantsData
       });
 
   }

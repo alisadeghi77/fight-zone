@@ -221,7 +221,7 @@
                                     <td>
                                         {{participant.coachPhoneNumber}}
                                     </td>
-                                    
+
                                     <td>
                                         {{participant.participantParamProperties}}
                                     </td>
@@ -277,7 +277,7 @@
                 <div class="card-body">
                     <form [formGroup]="bracketForm">
                         <div class="row align-items-end">
-                            <div class="col-4">
+                            <div class="col-3">
                                 <label class="form-label">انتخاب رده وزنی</label>
                                 <select class="form-select" formControlName="selectedKey"
                                     (change)="onBracketKeyChange($event)">
@@ -296,7 +296,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <button type="button" class="btn btn-primary w-100" (click)="generateBracketForKey()"
                                     [disabled]="!bracketForm.get('selectedKey')?.value">
                                     <i class="ti ti-plus me-1"></i>
@@ -315,12 +315,12 @@
             </div>
 
             <!-- Bracket View -->
-            <div class="bracket-view-container" *ngIf="selectedBracketInfo?.hasAnyBrackets">
-                <app-bracket-view 
-                    [matches]="matches"
-                    [competitionId]="competitionId"
-                    [keyId]="selectedBracketInfo?.key"
-                    (needRefresh)="onBracketNeedRefresh()" >
+            <div #bracketViewBlock class="bracket-view-container">
+                <app-bracket-view
+                [showExportButton]="true"
+                *ngIf="selectedBracketInfo?.hasAnyBrackets" [matches]="matches"
+                    [competitionId]="competitionId" [keyId]="selectedBracketInfo?.key"
+                    (needRefresh)="onBracketNeedRefresh()">
                 </app-bracket-view>
             </div>
         </ng-template>
