@@ -24,6 +24,7 @@ import { BracketViewComponent } from 'src/app/management/shared/bracket-view/bra
 import { ConfirmationModalComponent } from 'src/app/theme/shared/components/confirmation-modal/confirmation-modal.component';
 import html2pdf from 'html2pdf.js';
 import html2canvas from 'html2canvas';
+import { ToastService } from '../../../shared/toast/toast.service';
 
 @Component({
   selector: 'app-competition-insert-update',
@@ -59,7 +60,8 @@ export class CompetitionInsertUpdate implements OnInit {
     private matchHttpService: MatchHttpService,
     private route: ActivatedRoute,
     private router: Router,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private toast: ToastService
   ) { }
 
   ngOnInit(): void {
@@ -115,7 +117,6 @@ export class CompetitionInsertUpdate implements OnInit {
   }
 
   onDateChange(gregorianDate: string): void {
-    console.log('Gregorian date:', gregorianDate);
     this.form.patchValue({
       competitionDate: gregorianDate
     });
@@ -154,10 +155,11 @@ export class CompetitionInsertUpdate implements OnInit {
     this.competitionService.updateCompetitionParams(this.competitionId, JSON.parse(jsonParams))
       .subscribe({
         next: () => {
+          this.toast.success('پارامترهای مسابقه با موفقیت بروزرسانی شد');
           location.reload()
         },
         error: (error) => {
-          this.message = 'Error updating competition parameters ❌';
+          this.toast.error('خطا در بروزرسانی پارامترهای مسابقه');
           console.error('Error:', error);
         }
       });
@@ -173,17 +175,18 @@ export class CompetitionInsertUpdate implements OnInit {
       this.competitionService.updateCompetition({ id: this.competitionId, ...this.form.value })
         .subscribe({
           next: () => {
-            this.message = 'Competition updated successfully ✅';
+            this.toast.success('مسابقه با موفقیت بروزرسانی شد');
           },
-          error: () => this.message = 'Error updating competition ❌'
+          error: () => this.toast.error('خطا در بروزرسانی مسابقه')
         });
     } else {
       this.competitionService.createCompetition(this.form.value)
         .subscribe({
           next: (response) => {
+            this.toast.success('مسابقه با موفقیت ایجاد شد');
             this.router.navigate(['management/competitions/edit/', response.data]);
           },
-          error: (response) => this.message = response.error.errorMessages[0].message || 'Error creating competition ❌'
+          error: (response) => this.toast.error(response.error?.errorMessages?.[0]?.message || 'خطا در ایجاد مسابقه')
         });
     }
   }
@@ -259,12 +262,18 @@ export class CompetitionInsertUpdate implements OnInit {
     });
 
     this.participantsHttpService.getParticipants(this.competitionId)
-      .subscribe(response => {
-        this.participantsData = response.data.map(item => ({
-          ...item,
-          participantParamProperties: item.registerParams.map(p => p.value).join(' ')
-        }))
-        this.participantsFilteredData = this.participantsData
+      .subscribe({
+        next: (response) => {
+          this.participantsData = response.data.map(item => ({
+            ...item,
+            participantParamProperties: item.registerParams.map(p => p.value).join(' ')
+          }))
+          this.participantsFilteredData = this.participantsData
+        },
+        error: (error) => {
+          this.toast.error('خطا در بارگذاری شرکت0 کان');
+          console.error('Error loading participants:', error);
+        }
       });
 
   }

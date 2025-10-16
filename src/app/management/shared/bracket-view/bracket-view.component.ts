@@ -4,6 +4,7 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, ElementRef, 
 import { MatchDto } from 'src/app/shared/models/match.models';
 import { MatchHttpService } from 'src/app/shared/http-services/match-http-service';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { ToastService } from '../../shared/toast/toast.service';
 import html2canvas from 'html2canvas';
 
 @Component({
@@ -34,7 +35,7 @@ export class BracketViewComponent implements OnInit, OnChanges {
   visibleRounds: number[] = [];
   private _selectedRoundFilter: number | undefined;
 
-  constructor(private matchHttpService: MatchHttpService, private authService: AuthService) { }
+  constructor(private matchHttpService: MatchHttpService, private authService: AuthService, private toast: ToastService) { }
 
   ngOnInit(): void {
     this.groupMatchesByRound();
@@ -189,11 +190,11 @@ export class BracketViewComponent implements OnInit, OnChanges {
 
     this.matchHttpService.setMatchWinner(match.id, participantId).subscribe({
       next: (response) => {
+        this.toast.success('نتیجه با موفقیت ثبت شد');
         this.needRefresh.emit();
       },
       error: (error) => {
-        console.error('Error setting winner:', error);
-        // Handle error (show toast notification, etc.)
+        this.toast.error('ثبت نتیجه با خطا مواجه شد');
       }
     });
   }

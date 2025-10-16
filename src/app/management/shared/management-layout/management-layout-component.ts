@@ -10,12 +10,13 @@ import { ProjectThemConfig } from 'src/app/app-config';
 import { NavigationComponent } from '../navigation/navigation.component';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { AuthService } from '../../../shared/services/auth.service';
+import { ToastContainerComponent } from '../toast/toast-container.component';
 
 
 
 @Component({
   selector: 'app-management-layout',
-  imports: [CommonModule, NavigationComponent, NavBarComponent, RouterModule],
+  imports: [CommonModule, NavigationComponent, NavBarComponent, RouterModule, ToastContainerComponent],
   templateUrl: './management-layout-component.html',
   styleUrl: './management-layout-component.scss'
 })
