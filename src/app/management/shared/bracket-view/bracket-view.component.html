@@ -1,14 +1,16 @@
-<div class="container-fluid p-3" *ngIf="matches.length > 0">
-  <div class="text-center mb-3 border-bottom pb-2">
-    <h4 class="text-dark mb-1">جدول مسابقات</h4>
+<div class="container-fluid p-3" [class.web-theme]="viewType === 'web-view'" *ngIf="matches.length > 0">
+  <div class="mb-3" *ngIf="showRoundFilter">
+    <select class="form-select d-inline-block w-auto" [ngModel]="selectedRoundFilter" (ngModelChange)="onRoundFilterChange($event)">
+      <option [ngValue]="undefined">همه</option>
+      <option *ngFor="let r of rounds" [ngValue]="r">{{ getRoundName(r) }}</option>
+    </select>
   </div>
   <div class="">
     <div class="d-flex gap-3">
-      <div class="justify-content-between flex-shrink-0" *ngFor="let round of rounds; let i = index" style="min-width: 300px">
+      <div class="justify-content-between flex-shrink-0" *ngFor="let round of visibleRounds; let i = index" style="min-width: 300px">
         <div class="bg-primary text-white text-center rounded p-2 mb-2">
           <h6 class="mb-0">{{ getRoundName(round) }}
-            
-          <small class="text-muted">({{ roundGroupedMatches[round].length }} مسابقه)</small>
+            <small class="text-muted">({{ roundGroupedMatches[round].length }} مسابقه)</small>
           </h6>
         </div>
         <div class="d-flex justify-content-around h-100 flex-column gap-2 ">
@@ -19,23 +21,24 @@
               <div class="p-2 border border-primary rounded"
                 [class.cursor-pointer]="!match.isFirstParticipantBye && match.firstParticipantId"
                 (click)="onParticipantClick(match, true)">
-                <div class="fw-bold">
+                <div class="fw-bold text-dark d-flex justify-content-between align-items-center">
                   {{ getParticipantDisplayName(match, true) }}
                   <small class="text-muted" *ngIf="getCoachDisplayName(match, true)">
                     ({{ getCoachDisplayName(match,true) }})
                   </small>
+                  <span class="placement-badge" *ngIf="getPlacementLabel(match, true)" [ngClass]="getPlacementClass(match, true)">{{ getPlacementLabel(match, true) }}</span>
                 </div>
               </div>
-              <div class="text-center">
-              </div>
+              <div class="text-center"></div>
               <div class="p-2 border border-danger rounded"
                 [class.cursor-pointer]="!match.isSecondParticipantBye && match.secondParticipantId"
                 (click)="onParticipantClick(match, false)">
-                <div class="fw-bold">
+                <div class="fw-bold text-dark d-flex justify-content-between align-items-center">
                   {{ getParticipantDisplayName(match, false) }}
                   <small class="text-muted" *ngIf="getCoachDisplayName(match, false)">
                     ({{ getCoachDisplayName(match,false) }})
                   </small>
+                  <span class="placement-badge" *ngIf="getPlacementLabel(match, false)" [ngClass]="getPlacementClass(match, false)">{{ getPlacementLabel(match, false) }}</span>
                 </div>
               </div>
             </div>

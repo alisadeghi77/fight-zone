@@ -142,6 +142,7 @@
             [matches]="matchesByKey[bracketKey.key]"
             [competitionId]="competitionId"
             [keyId]="bracketKey.key"
+            [viewType]="'web-view'"
             (needRefresh)="refreshBracket(bracketKey.key)">
           </app-bracket-view>
         </div>

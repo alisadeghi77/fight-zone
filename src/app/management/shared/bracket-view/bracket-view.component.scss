@@ -22,3 +22,67 @@
     top: -8px;
   }
 }
+
+.placement-badge {
+  font-size: .75rem;
+  font-weight: 700;
+  color: #111827;
+  background: #f3f4f6; /* neutral base */
+  border: 1px solid #e5e7eb; /* neutral border */
+  border-radius: 999px;
+  padding: .1rem .4rem;
+  margin-inline-start: .5rem;
+}
+
+.place-1st {
+  color: #775d07;
+  background: #fef3c7; /* amber-100 */
+  border-color: #fcd34d; /* amber-300 */
+}
+
+.place-2nd {
+  color: #374151;
+  background: #f3f4f6; /* gray-100 */
+  border-color: #d1d5db; /* gray-300 */
+}
+
+.place-3rd {
+  color: #78350f;
+  background: #fdecc8; /* bronze-like */
+  border-color: #78350f; /* amber-500 */
+}
+
+/* Web theme: color-only overrides, preserve layout and structure */
+.web-theme {
+  .text-dark {
+    color: black !important; /* slate-900 */
+  }
+
+  .text-muted {
+    color: black !important; /* gray-500 */
+  }
+
+  /* Round header bar overrides */
+  .bg-primary {
+    background-color: #f5f7fb !important; /* soft header background */
+    border: 1px solid #e6eaf0 !important;
+  }
+
+  .text-white {
+    color: #0f172a !important; /* dark text for light header */
+  }
+
+  .bg-dark {
+    background-color: #111827 !important; /* slate-900 */
+  }
+
+  .border-primary {
+    border-color: #93c5fd !important; /* blue-300 */
+    background-color: #f0f9ff; /* sky-50 */
+  }
+
+  .border-danger {
+    border-color: #fda4af !important; /* rose-300 */
+    background-color: #fff5f5; /* rose-50 */
+  }
+}
