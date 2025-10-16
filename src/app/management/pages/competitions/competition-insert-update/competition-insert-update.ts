@@ -160,7 +160,6 @@ export class CompetitionInsertUpdate implements OnInit {
         },
         error: (error) => {
           this.toast.error('خطا در بروزرسانی پارامترهای مسابقه');
-          console.error('Error:', error);
         }
       });
   }
@@ -223,7 +222,7 @@ export class CompetitionInsertUpdate implements OnInit {
     this.participantsHttpService.createParticipant(participantData)
       .subscribe({
         next: (response) => {
-          this.message = 'Participant registered successfully ✅';
+          this.toast.success('شرکت‌کننده با موفقیت ثبت شد');
           this.participantForm.patchValue({
             participantUserId: '',
             phoneNumber: '',
@@ -245,8 +244,7 @@ export class CompetitionInsertUpdate implements OnInit {
           this.loadParticipants();
         },
         error: (error) => {
-          this.message = error.error?.errorMessages?.[0]?.message || 'Error registering participant ❌';
-          console.error('Error:', error);
+          this.toast.error(error.error?.errorMessages?.[0]?.message || 'خطا در ثبت شرکت‌کننده');
         }
       });
   }
@@ -272,7 +270,6 @@ export class CompetitionInsertUpdate implements OnInit {
         },
         error: (error) => {
           this.toast.error('خطا در بارگذاری شرکت0 کان');
-          console.error('Error loading participants:', error);
         }
       });
 
@@ -327,11 +324,11 @@ export class CompetitionInsertUpdate implements OnInit {
     this.competitionService.startRegistration(this.competitionId)
       .subscribe({
         next: () => {
+          this.toast.success('ثبت‌نام مسابقه آغاز شد');
           this.reloadCompetitionData();
         },
         error: (error) => {
-          this.message = 'Error starting registration ❌';
-          console.error('Error:', error);
+          this.toast.error('خطا در آغاز ثبت‌نام');
         }
       });
   }
@@ -345,11 +342,11 @@ export class CompetitionInsertUpdate implements OnInit {
     this.competitionService.changeVisibility(this.competitionId)
       .subscribe({
         next: () => {
+          this.toast.success('وضعیت نمایش مسابقه تغییر کرد');
           this.reloadCompetitionData();
         },
         error: (error) => {
-          this.message = 'Error changing visibility ❌';
-          console.error('Error:', error);
+          this.toast.error('خطا در تغییر وضعیت نمایش');
         }
       });
   }
@@ -363,11 +360,11 @@ export class CompetitionInsertUpdate implements OnInit {
     this.competitionService.changeRegistrationStatus(this.competitionId)
       .subscribe({
         next: () => {
+          this.toast.success('وضعیت ثبت‌نام مسابقه تغییر کرد');
           this.reloadCompetitionData();
         },
         error: (error) => {
-          this.message = 'Error changing registration status ❌';
-          console.error('Error:', error);
+          this.toast.error('خطا در تغییر وضعیت ثبت‌نام');
         }
       });
   }
@@ -376,11 +373,11 @@ export class CompetitionInsertUpdate implements OnInit {
     this.participantsHttpService.approveParticipant(participantId)
       .subscribe({
         next: (response) => {
+          this.toast.success('شرکت‌کننده تایید شد');
           this.loadParticipants(); // Refresh the participants list
         },
         error: (error) => {
-          this.message = error.error?.errorMessages?.[0]?.message || 'خطا در تایید شرکت کننده ❌';
-          console.error('Error approving participant:', error);
+          this.toast.error(error.error?.errorMessages?.[0]?.message || 'خطا در تایید شرکت‌کننده');
         }
       });
   }
@@ -389,11 +386,11 @@ export class CompetitionInsertUpdate implements OnInit {
     this.participantsHttpService.rejectParticipant(participantId)
       .subscribe({
         next: (response) => {
+          this.toast.success('شرکت‌کننده رد شد');
           this.loadParticipants(); // Refresh the participants list
         },
         error: (error) => {
-          this.message = error.error?.errorMessages?.[0]?.message || 'خطا در رد شرکت کننده ❌';
-          console.error('Error rejecting participant:', error);
+          this.toast.error(error.error?.errorMessages?.[0]?.message || 'خطا در رد شرکت‌کننده');
         }
       });
   }
@@ -410,11 +407,11 @@ export class CompetitionInsertUpdate implements OnInit {
           this.participantsHttpService.deleteParticipant(participantId)
             .subscribe({
               next: (response) => {
+                this.toast.success('شرکت‌کننده حذف شد');
                 this.loadParticipants(); // Refresh the participants list
               },
               error: (error) => {
-                this.message = error.error?.errorMessages?.[0]?.message || 'خطا در حذف شرکت کننده ❌';
-                console.error('Error deleting participant:', error);
+                this.toast.error(error.error?.errorMessages?.[0]?.message || 'خطا در حذف شرکت‌کننده');
               }
             });
         }
@@ -446,7 +443,7 @@ export class CompetitionInsertUpdate implements OnInit {
           }
         },
         error: (error) => {
-          console.error('Error reloading competition data:', error);
+          this.toast.error('خطا در بارگذاری اطلاعات مسابقه');
         }
       });
   }
@@ -462,8 +459,7 @@ export class CompetitionInsertUpdate implements OnInit {
           this.parseBracketKeys();
         },
         error: (error) => {
-          this.message = 'خطا در بارگذاری کلیدهای جدول ❌';
-          console.error('Error loading bracket keys:', error);
+          this.toast.error('خطا در بارگذاری کلیدهای جدول');
         }
       });
   }
@@ -506,8 +502,7 @@ export class CompetitionInsertUpdate implements OnInit {
           this.matches = response.data;
         },
         error: (error) => {
-          this.message = 'خطا در بارگذاری مسابقات ❌';
-          console.error('Error loading matches:', error);
+          this.toast.error('خطا در بارگذاری مسابقات');
         }
       });
   }
@@ -538,18 +533,16 @@ export class CompetitionInsertUpdate implements OnInit {
                 this.bracketHttpService.generateBracketForKey(this.competitionId!, selectedKey)
                   .subscribe({
                     next: (response) => {
-                      this.message = 'جدول با موفقیت ایجاد شد ✅';
+                      this.toast.success('جدول با موفقیت ایجاد شد');
                       this.loadBracketKeys();
                     },
                     error: (error) => {
-                      this.message = 'خطا در ایجاد جدول ❌';
-                      console.error('Error generating bracket:', error);
+                      this.toast.error('خطا در ایجاد جدول');
                     }
                   });
               },
               error: (error) => {
-                this.message = 'خطا در ایجاد جدول ❌';
-                console.error('Error generating bracket:', error);
+                this.toast.error('خطا در ایجاد جدول');
               }
             });
         }
@@ -574,19 +567,16 @@ export class CompetitionInsertUpdate implements OnInit {
                 this.bracketHttpService.generateAllBrackets(this.competitionId!)
                   .subscribe({
                     next: (response) => {
-                      this.message = 'جداول کلی با موفقیت ایجاد شدند ✅';
+                          this.toast.success('جداول کلی با موفقیت ایجاد شدند');
                       this.loadBracketKeys(); // Refresh the data
                     },
                     error: (error) => {
-                      this.message = 'خطا در ایجاد جداول کلی ❌';
-                      console.error('Error generating all brackets:', error);
+                          this.toast.error('خطا در ایجاد جداول کلی');
                     }
                   });
               },
               error: (error) => {
-                this.message = 'خطا در ایجاد جداول کلی ❌';
-                console.error('Error generating all brackets:', error);
-
+                    this.toast.error('خطا در ایجاد جداول کلی');
               }
             });
         }
